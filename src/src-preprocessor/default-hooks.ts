@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import * as paths from "path";
+import * as vm from "vm";
 import * as _ from "lodash";
 import * as jsonpath from "jsonpath";
 
@@ -71,22 +72,39 @@ export function jsTemplate (filter: (f: string) => boolean, dataObject: any): So
         if (!filter(f)) return;
 
         const primaryFileContents = fs.readFileSync(f, "UTF-8");
-        const fileContents = primaryFileContents;
+        let fileContents = primaryFileContents;
 
         let m;
 
         // block comments
-        const regex = /\/\*§([^§]+)§\*\/([^§]+)\/\*§([^§]+)§\*\//gmui;
+        const regex = /\/\*§([^§]*)§\*\/([^§]+)\/\*§([^§]*)§\*\//gmui;
         while ((m = regex.exec(fileContents)) !== null) {
             // This is necessary to avoid infinite loops with zero-width matches
             if (m.index === regex.lastIndex) {
                 regex.lastIndex++;
             }
 
-            // The result can be accessed through the `m`-variable.
-            m.forEach((match, groupIndex) => {
-                console.log(`Found match, group ${groupIndex}: ${match}`);
-            });
+            if (m.length >= 4) {
+                const wholeMatch = m[0];
+                console.log("§ Processing template " + wholeMatch);
+                const left = m[1];
+                const value = m[2];
+                const right = m[3];
+
+                let newValue = "";
+
+                const context = vm.createContext({
+                    data: _.cloneDeep(dataObject)
+                });
+                const leftResult = (left.trim().length > 0) ? new vm.Script(left).runInContext(context) : "";
+                const rightResult = (right.trim().length > 0) ? new vm.Script(right).runInContext(context) : "";
+                newValue = leftResult + rightResult;
+                console.log("§ result: `" + newValue + "`");
+
+                const replacement = "/*" + "§" + left + "§" + "*/" + newValue + "/*" + "§" + right + "§" + "*/";
+
+                fileContents = fileContents.replace(wholeMatch, replacement);
+            }
         }
 
         if (fileContents !== primaryFileContents) {

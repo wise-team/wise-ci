@@ -4,16 +4,18 @@ import * as _ from "lodash";
 import * as defaultHooks from "./default-hooks";
 import * as defaultFilters from "./default-filters";
 
+const ver = /*§§*/ "1.2.2" /*§ " \"" + data.config.wiseVersion + "\" " §*/;
+
 export class SourcePreprocessor {
     private parent: string;
-    private excludeFiles: string [] = [ ".", "..", ".DS_Store", "node_modules", "vendor" ];
+    private excludes: string [] = [ ".", "..", ".DS_Store", "node_modules", "vendor", ".git", ".venv" ];
 
     public constructor(parent: string) {
-        this.parent = parent;
+        this.parent = paths.resolve(parent);
     }
 
-    public async preprocess(dataObject: any, hooks: SourcePreprocessor.Hook []) {
-        await this.visitDir(this.parent, dataObject, hooks);
+    public async preprocess(dataObject: any, hooks: SourcePreprocessor.Hook [], excludes: string []) {
+        await this.visitDir(this.parent, dataObject, hooks, [...this.excludes, ...excludes]);
     }
 
     private async visitFile(path_: string, hooks: SourcePreprocessor.Hook []) {
@@ -23,18 +25,21 @@ export class SourcePreprocessor {
         }
     }
 
-    private async visitDir(path_: string, dataObject_: any, hooks_: SourcePreprocessor.Hook []) {
+    private async visitDir(path_: string, dataObject_: any, hooks_: SourcePreprocessor.Hook [], excludes_: string []) {
         const path = paths.resolve(path_);
+        if (paths.resolve(path + "/..") === this.parent) console.log("> Processing " + path);
         const dataObject: any = _.cloneDeep(dataObject_);
         const hooks: SourcePreprocessor.Hook [] = _.cloneDeep(hooks_) as SourcePreprocessor.Hook [];
-        const preprocessPath = paths.resolve(path, ".preprocess.js");
+        let excludes: string [] = _.cloneDeep(excludes_);
+        const preprocessPath = paths.resolve(path, ".preprocess.ts");
 
         if (fs.existsSync(preprocessPath)) {
             const preprocessFileObj = await import(preprocessPath);
             if(!preprocessFileObj.hooks) throw new Error(preprocessPath + " file is missing 'hooks' export");
             if(!preprocessFileObj.data) throw new Error(preprocessPath + " file is missing 'data' export");
-            hooks.push(preprocessFileObj.hooks)
+            preprocessFileObj.hooks.forEach((hook: SourcePreprocessor.Hook) => hooks.push(hook));
             _.merge(dataObject, preprocessFileObj.data);
+            if (preprocessFileObj.excludes) excludes = [...excludes, ...preprocessFileObj.excludes];
         }
 
         this.visitFile(path, hooks);
@@ -43,10 +48,10 @@ export class SourcePreprocessor {
         for (let i = 0; i < children.length; i++) {
             const child = paths.resolve(path, children[i]);
             const basename = paths.basename(child);
-            if (this.excludeFiles.filter(e => e === basename).length === 0) {
+            if (excludes.filter(e => e === basename).length === 0) {
                 const childStat = fs.lstatSync(child);
                 if (childStat.isDirectory()) {
-                    await this.visitDir(child, dataObject, hooks /* here we pass hooks without templater, as it is applied in each dir separately*/);
+                    await this.visitDir(child, dataObject, hooks /* here we pass hooks without templater, as it is applied in each dir separately*/, excludes);
                 }
                 else if (childStat.isFile()) {
                     const hooksWithTemplater: SourcePreprocessor.Hook [] = [defaultHooks.jsTemplate(() => true, dataObject), ...hooks];

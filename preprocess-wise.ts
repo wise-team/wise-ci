@@ -62,7 +62,9 @@ async function run() {
                 ["$.bugs.url", (obj, value) => "https://github.com/" + d(config.githubOrgName) + "/" + obj.name + "/issues"],
             ]
         ),
-    ])
+    ], 
+    // exclude: 
+    [ ".vscode" ])
     .then(
         () => {
             console.log("Preprocessing done");
