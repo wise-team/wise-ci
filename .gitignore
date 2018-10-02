@@ -1,0 +1,13 @@
+# Mac OS X stuff
+.DS_Store
+
+# Intelij IDEA IDEs
+/.idea/
+
+# VS Code
+/.vscode
+
+## Node
+/dist
+/node_modules
+/credentials.yml

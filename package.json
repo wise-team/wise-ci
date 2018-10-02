@@ -1,0 +1,72 @@
+{
+  "name": "steem-wise-test",
+  "version": "1.1.2",
+  "description": "System tests for steem wise",
+  "directories": {},
+  "engines": {
+    "node": ">=9.11"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@commitlint/cli": "^7.1.2",
+    "@commitlint/config-conventional": "^7.1.2",
+    "@types/axios": "^0.14.0",
+    "@types/bluebird-global": "^3.5.9",
+    "@types/chai": "^4.1.6",
+    "@types/dockerode": "^2.5.5",
+    "@types/get-stream": "^3.0.1",
+    "@types/js-yaml": "^3.11.2",
+    "@types/lodash": "^4.14.116",
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^9.6.31",
+    "@types/npm": "^2.0.29",
+    "@types/tar-fs": "^1.16.1",
+    "axios": "^0.18.0",
+    "bluebird-global": "^1.0.1",
+    "broken-link-checker": "^0.7.8",
+    "chai": "^4.2.0",
+    "dockerode": "^2.5.7",
+    "exit-hook": "^2.0.0",
+    "express": "^4.16.3",
+    "get-stream": "^4.0.0",
+    "husky": "^0.14.3",
+    "js-yaml": "^3.12.0",
+    "mocha": "^5.2.0",
+    "npm": "^6.4.1",
+    "steem": "^0.7.2",
+    "steem-wise-core": "^1.2.1",
+    "tar-fs": "^1.16.3",
+    "ts-node": "^6.2.0",
+    "tslint": "^5.11.0",
+    "typescript": "^2.9.2"
+  },
+  "scripts": {
+    "check": "if echo \"$(node --version)\" | grep -q \"$(cat .nvmrc)\"; then echo \"Node version correct\"; else echo \"Node version does not match that in .nvmrc\" && exit 1; fi",
+    "tslint": "tslint -c tslint.json -p tsconfig.json",
+    "test": "npm run check && npm run tslint && mocha -r ts-node/register src/tests/entrance.ts",
+    "diagnose": "npm run check && npm run tslint && mocha -r ts-node/register src/live-diagnostics/entrance.ts",
+    "testall": "npm run check && npm run tslint && mocha -r ts-node/register src/*/entrance.ts",
+    "commitmsg": "commitlint -E GIT_PARAMS"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wise-team/steem-wise-test.git"
+  },
+  "keywords": [
+    "steem", "blockchain", "wise"
+  ],
+  "author": "The Wise Team (https://wise-team.io/)",
+  "contributors": [
+    "Jędrzej Lewandowski <jedrzejblew@gmail.com> (https://jedrzej.lewandowski.doctor/)"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wise-team/steem-wise-test/issues"
+  },
+  "homepage": "https://wise.vote/"
+}
