@@ -13,7 +13,8 @@ const config: any = {
     sqlEndpointHost: "sql.wise.vote",
     badges: [],
     generateHelpUsMd: () => {},
-    generateHelpMd: () => {}
+    generateHelpMd: () => {},
+    generateDefaultBadges: () => {}
 };
 
 
@@ -29,6 +30,9 @@ config.badges.push((data: any) => { // wise operations count badge:
     return "[![Wise operations count](https://img.shields.io/badge/dynamic/json.svg?label=wise%20operations%20count&url="
                         + encodeURIComponent(apiUrl) + "&query=" + encodeURIComponent(jsonPathQuery) + "&colorB=blue&style=flat-square)](" + apiLink + ")";
 });
+config.generateDefaultBadges = (data: any) => {
+    return "\n" + config.badges.map((badge: any) => badge(data, d)).join(" ") + "\n";
+};
 
 
 
