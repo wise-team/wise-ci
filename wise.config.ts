@@ -21,6 +21,7 @@ const config: any = {
 
 // badges:
 config.badges.push((data: any) => "[![License](https://img.shields.io/github/license/" + d(config.githubOrgName) + "/" + d(data.repository.name) + ".svg?style=flat-square)](https://github.com/" + d(config.githubOrgName) + "/" + d(data.repository.name) + "/blob/master/LICENSE)");
+config.badges.push((data: any) => "[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)");
 config.badges.push((data: any) => "[![Chat](https://img.shields.io/badge/chat%20on%20discord-6b11ff.svg?style=flat-square)](" + d(config.chatUrl) + ")");
 config.badges.push((data: any) => { // wise operations count badge:
     const apiUrl = "http://" + d(config.sqlEndpointHost) + ":/operations?select=count";
@@ -30,8 +31,10 @@ config.badges.push((data: any) => { // wise operations count badge:
     return "[![Wise operations count](https://img.shields.io/badge/dynamic/json.svg?label=wise%20operations%20count&url="
                         + encodeURIComponent(apiUrl) + "&query=" + encodeURIComponent(jsonPathQuery) + "&colorB=blue&style=flat-square)](" + apiLink + ")";
 });
-config.generateDefaultBadges = (data: any) => {
-    return "\n" + config.badges.map((badge: any) => badge(data, d)).join(" ") + "\n";
+config.generateDefaultBadges = (data: any, options?: { npm: boolean }) => {
+    let npmBadge: string = "";
+    if (data.npm) npmBadge = "[![npm](https://img.shields.io/npm/v/" + d(data.npm.package) + ".svg?style=flat-square)](https://www.npmjs.com/package/" + d(data.npm.package) + ") ";
+    return "\n" + npmBadge + config.badges.map((badge: any) => badge(data, d)).join(" ") + "\n";
 };
 
 
