@@ -6,7 +6,7 @@ import * as _ from "lodash";
 import { SourcePreprocessor, d } from "./index";
 
 export function jsTemplate (filter: (f: string) => boolean, dataObject: any): SourcePreprocessor.Hook {
-    return async (f: string) => {
+    return async (f: string, data: any) => {
         if (!filter(f)) return;
 
         try {

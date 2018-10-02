@@ -6,7 +6,7 @@ import * as jsonpath from "jsonpath";
 import { SourcePreprocessor } from "./index";
 
 export function ensureChildFile (filter: (f: string) => boolean, filename: string, fileContents: string): SourcePreprocessor.Hook {
-    return async (f: string) => {
+    return async (f: string, data: any) => {
         if (!filter(f)) return;
 
         if (fs.lstatSync(f).isDirectory()) {
@@ -27,7 +27,7 @@ export function ensureChildFile (filter: (f: string) => boolean, filename: strin
 }
 
 export function ensureChildDirectory (filter: (f: string) => boolean, dirname: string): SourcePreprocessor.Hook {
-    return async (f: string) => {
+    return async (f: string, data: any) => {
         if (!filter(f)) return;
 
         if (fs.lstatSync(f).isDirectory()) {
@@ -43,8 +43,8 @@ export function ensureChildDirectory (filter: (f: string) => boolean, dirname: s
     };
 }
 
-export function jsonPathRules (filter: (f: string) => boolean, rules: [string, (obj: any, value: any) => any] []): SourcePreprocessor.Hook {
-    return async (f: string) => {
+export function jsonPathRules (filter: (f: string) => boolean, rules: [string, (obj: any, value: any, data?: any) => any] []): SourcePreprocessor.Hook {
+    return async (f: string, data: any) => {
         if (!filter(f)) return;
 
         const fileContents = fs.readFileSync(f, "UTF-8");
@@ -53,9 +53,9 @@ export function jsonPathRules (filter: (f: string) => boolean, rules: [string, (
         rules.forEach(rule => {
             const matches: any [] = jsonpath.query(obj, rule[0]);
             if (matches.length === 0) {
-                jsonpath.value(obj, rule[0], rule[1](obj, undefined));
+                jsonpath.value(obj, rule[0], rule[1](obj, undefined, data));
             }
-            else jsonpath.apply(obj, rule[0], (value) => rule[1](obj, value));
+            else jsonpath.apply(obj, rule[0], (value) => rule[1](obj, value, data));
         });
 
         if (!_.isEqual(primaryObj, obj)) {

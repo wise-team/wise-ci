@@ -54,16 +54,16 @@ async function run() {
                 ["$.version", (obj, value) => d(config.wiseVersion)],
                 ["$.engines.node", (obj, value) => ">=" + d(config.nodeVersion)],
                 ["$.repository.type", (obj, value) => "git"],
-                ["$.repository.url", (obj, value) => "git+https://github.com/" + d(config.githubOrgName) + "/" + obj.name + ".git"],
+                ["$.repository.url", (obj, value, data) => "git+https://github.com/" + d(config.githubOrgName) + "/" + d(data.repository.name) + ".git"],
                 ["$.keywords", (obj, value) => d(config.npmKeywords)],
                 ["$.author", (obj, value) => d(config.npmAuthor)],
                 ["$.license", (obj, value) => d(config.license)],
                 ["$.homepage", (obj, value) => d(config.wiseHomepage)],
-                ["$.bugs.url", (obj, value) => "https://github.com/" + d(config.githubOrgName) + "/" + obj.name + "/issues"],
+                ["$.bugs.url", (obj, value, data) => "https://github.com/" + d(config.githubOrgName) + "/" + d(data.repository.name) + "/issues"],
             ]
         ),
-    ], 
-    // exclude: 
+    ],
+    // exclude:
     [ ".vscode" ])
     .then(
         () => {

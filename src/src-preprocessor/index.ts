@@ -18,10 +18,10 @@ export class SourcePreprocessor {
         await this.visitDir(this.parent, dataObject, hooks, [...this.excludes, ...excludes]);
     }
 
-    private async visitFile(path_: string, hooks: SourcePreprocessor.Hook []) {
+    private async visitFile(path_: string, dataObject: any, hooks: SourcePreprocessor.Hook []) {
         const path = paths.resolve(path_);
         for (let i = 0; i < hooks.length; i++) {
-            await hooks[i](path);
+            await hooks[i](path, dataObject);
         }
     }
 
@@ -35,14 +35,14 @@ export class SourcePreprocessor {
 
         if (fs.existsSync(preprocessPath)) {
             const preprocessFileObj = await import(preprocessPath);
-            if(!preprocessFileObj.hooks) throw new Error(preprocessPath + " file is missing 'hooks' export");
-            if(!preprocessFileObj.data) throw new Error(preprocessPath + " file is missing 'data' export");
+            if (!preprocessFileObj.hooks) throw new Error(preprocessPath + " file is missing 'hooks' export");
+            if (!preprocessFileObj.data) throw new Error(preprocessPath + " file is missing 'data' export");
             preprocessFileObj.hooks.forEach((hook: SourcePreprocessor.Hook) => hooks.push(hook));
             _.merge(dataObject, preprocessFileObj.data);
             if (preprocessFileObj.excludes) excludes = [...excludes, ...preprocessFileObj.excludes];
         }
 
-        this.visitFile(path, hooks);
+        this.visitFile(path, hooks, dataObject);
 
         const children = fs.readdirSync(path);
         for (let i = 0; i < children.length; i++) {
@@ -55,7 +55,7 @@ export class SourcePreprocessor {
                 }
                 else if (childStat.isFile()) {
                     const hooksWithTemplater: SourcePreprocessor.Hook [] = [jsTemplate(() => true, dataObject), ...hooks];
-                    await this.visitFile(child, hooksWithTemplater);
+                    await this.visitFile(child, dataObject, hooksWithTemplater);
                 }
             }
         }
@@ -63,7 +63,7 @@ export class SourcePreprocessor {
 }
 
 export namespace SourcePreprocessor {
-    export type Hook = (path: string) => Promise<void>;
+    export type Hook = (path: string, data: any) => Promise<void>;
 
     export const hooks = defaultHooks;
     export const filters = defaultFilters;
