@@ -3,8 +3,8 @@ import * as paths from "path";
 import * as _ from "lodash";
 import * as defaultHooks from "./default-hooks";
 import * as defaultFilters from "./default-filters";
+import { jsTemplate } from "./js-template-hook";
 
-const ver = /*§§*/ "1.2.2" /*§ " \"" + data.config.wiseVersion + "\" " §*/;
 
 export class SourcePreprocessor {
     private parent: string;
@@ -54,7 +54,7 @@ export class SourcePreprocessor {
                     await this.visitDir(child, dataObject, hooks /* here we pass hooks without templater, as it is applied in each dir separately*/, excludes);
                 }
                 else if (childStat.isFile()) {
-                    const hooksWithTemplater: SourcePreprocessor.Hook [] = [defaultHooks.jsTemplate(() => true, dataObject), ...hooks];
+                    const hooksWithTemplater: SourcePreprocessor.Hook [] = [jsTemplate(() => true, dataObject), ...hooks];
                     await this.visitFile(child, hooksWithTemplater);
                 }
             }
