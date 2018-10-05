@@ -65,3 +65,19 @@ export function jsonPathRules (filter: (f: string) => boolean, rules: [string, (
         }
     };
 }
+
+export function regexpReplace (filter: (f: string) => boolean, pattern: RegExp, replace: string): SourcePreprocessor.Hook {
+    return async (f: string, data: any) => {
+        if (!filter(f)) return;
+
+        if (fs.lstatSync(f).isFile()) {
+            const primaryFileContents = fs.readFileSync(f, "UTF-8");
+            const fileContents = primaryFileContents.replace(pattern, replace);
+
+            if (fileContents !== primaryFileContents) {
+                fs.writeFileSync(f, fileContents);
+                console.log("Modified " + f);
+            }
+        }
+    };
+}
