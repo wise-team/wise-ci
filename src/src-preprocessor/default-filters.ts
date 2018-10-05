@@ -18,3 +18,9 @@ export function isFileNamed (fileName: string): (f: string) => boolean {
         return paths.basename(f) === fileName && fs.lstatSync(f).isFile();
     };
 }
+
+export function hasExtension (ext: string): (f: string) => boolean {
+    return (f: string) => {
+        return fs.lstatSync(f).isFile() && paths.extname(f) === ext;
+    };
+}
