@@ -38,10 +38,11 @@ export function jsTemplate (filter: (f: string) => boolean, dataObject: any): So
 }
 
 
-function executeTemplate(data: any, codeLeft: string, codeRight: string): string {
+function executeTemplate(data: any, codeLeft: string, value: string, codeRight: string): string {
     const context = vm.createContext({
         data: _.cloneDeep(data),
-        d: d
+        d: d,
+        value: value
     });
     const leftResult = (codeLeft.trim().length > 0) ? new vm.Script(codeLeft).runInContext(context) : "";
     const rightResult = (codeRight.trim().length > 0) ? new vm.Script(codeRight).runInContext(context) : "";
@@ -63,7 +64,7 @@ function processBlockCommentsTemplates(f: string, fileContents: string, dataObje
             const value = m[2];
             const right = m[3];
             let newValue = "";
-            newValue = executeTemplate(dataObject, left, right);
+            newValue = executeTemplate(dataObject, left, value, right);
 
             const replacement = replacer(left, newValue, right);
 
