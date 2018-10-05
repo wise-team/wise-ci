@@ -46,7 +46,10 @@ function executeTemplate(data: any, codeLeft: string, value: string, codeRight: 
     });
     const leftResult = (codeLeft.trim().length > 0) ? new vm.Script(codeLeft).runInContext(context) : "";
     const rightResult = (codeRight.trim().length > 0) ? new vm.Script(codeRight).runInContext(context) : "";
-    return  leftResult + rightResult;
+    const result =  leftResult + rightResult;
+
+    if (result.indexOf("undefined") !== -1) throw new Error("Template evaluation result contains word \"undefined\"! It is forbidden in the output.");
+    return result;
 }
 
 

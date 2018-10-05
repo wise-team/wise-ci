@@ -20,7 +20,14 @@ const config: any = {
     modules: {
         hub: {
             productionUrl: "http://portal.wise.vote/"
-        }
+        },
+        sql: {
+
+        },
+        manual: {
+
+        },
+        team: {}
     }
 };
 
