@@ -7,14 +7,21 @@ const config: any = {
     npmAuthor: "The Wise Team (https://wise-team.io/)",
     license: "MIT",
     wiseHomepage: "https://wise.vote/",
+    wiseSteemAccount: "wise-team",
     githubOrgName: "wise-team",
     manualUrl: "https://wise.vote/introduction",
     chatUrl: "https://discordapp.com/invite/CwxQDbG",
+    sqlEndpointUrl: "http://sql.wise.vote/",
     sqlEndpointHost: "sql.wise.vote",
     badges: [],
     generateHelpUsMd: () => {},
     generateHelpMd: () => {},
-    generateDefaultBadges: () => {}
+    generateDefaultBadges: () => {},
+    modules: {
+        hub: {
+            productionUrl: "http://portal.wise.vote/"
+        }
+    }
 };
 
 
