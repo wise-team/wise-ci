@@ -2,8 +2,8 @@ import * as fs from "fs";
 import * as paths from "path";
 import * as vm from "vm";
 import * as _ from "lodash";
-
-import { SourcePreprocessor, d } from "./index";
+import * as templateMethods from "./template-methods";
+import { SourcePreprocessor } from "./index";
 
 export function jsTemplate (filter: (f: string) => boolean, dataObject: any): SourcePreprocessor.Hook {
     return async (f: string, data: any) => {
@@ -39,16 +39,22 @@ export function jsTemplate (filter: (f: string) => boolean, dataObject: any): So
 
 
 function executeTemplate(data: any, codeLeft: string, value: string, codeRight: string): string {
-    const context = vm.createContext({
+    let contextData: any = {
         data: _.cloneDeep(data),
-        d: d,
         value: value
-    });
+    };
+    contextData = _.merge(contextData, templateMethods);
+
+    const context = vm.createContext(contextData);
     const leftResult = (codeLeft.trim().length > 0) ? new vm.Script(codeLeft).runInContext(context) : "";
     const rightResult = (codeRight.trim().length > 0) ? new vm.Script(codeRight).runInContext(context) : "";
     const result =  leftResult + rightResult;
 
-    if (result.indexOf("undefined") !== -1) throw new Error("Template evaluation result contains word \"undefined\"! It is forbidden in the output.");
+    if (
+        (codeLeft.indexOf("allowUndefined()") === -1 && codeRight.indexOf("allowUndefined()") === -1)
+        && result.indexOf("undefined") !== -1
+    )
+        throw new Error("Template evaluation result contains word \"undefined\"! If this is intended, please use allowUndefined() inside the script.");
     return result;
 }
 

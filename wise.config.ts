@@ -45,10 +45,10 @@ config.badges.push((data: any) => { // wise operations count badge:
     return "[![Wise operations count](https://img.shields.io/badge/dynamic/json.svg?label=wise%20operations%20count&url="
                         + encodeURIComponent(apiUrl) + "&query=" + encodeURIComponent(jsonPathQuery) + "&colorB=blue&style=flat-square)](" + apiLink + ")";
 });
-config.generateDefaultBadges = (data: any, options?: { npm: boolean }) => {
+config.generateDefaultBadges = (data: any) => {
     let npmBadge: string = "";
     if (data.npm) npmBadge = "[![npm](https://img.shields.io/npm/v/" + d(data.npm.package) + ".svg?style=flat-square)](https://www.npmjs.com/package/" + d(data.npm.package) + ") ";
-    return "\n" + npmBadge + config.badges.map((badge: any) => badge(data, d)).join(" ") + "\n";
+    return "\n" + npmBadge + data.config.badges.map((badge: any) => badge(data, d)).join(" ") + "\n";
 };
 
 
