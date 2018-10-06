@@ -10,10 +10,14 @@ export class Config {
         homepage: "https://wise.vote/"
     };
 
+    witness = {
+        account: "wise-team"
+    };
+
     team = {
         name: "Wise Team",
         website: { url: "https://wise-team.io/" },
-        steem: { account: "wise-team", witness: "wise-team" }
+        steem: { account: "wise-team" }
     };
 
     npm = {
