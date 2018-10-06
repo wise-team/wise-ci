@@ -58,11 +58,11 @@ export function objectAsCode(v: any, indentation: string = "  ", dataParamForMet
 
 export function outputConfig(data: any): string {
     let out = "\n";
-    out += "export const config = ";
+    out += "export const data = ";
     // const templateMethods = require(__filename);
     // _.forOwn(templateMethods, (v, propName) => out += templateMethods[propName].toString() + ";\n");
     // out += "config = ";
-    const generatedCode = objectAsCode(data.config, "", data);
+    const generatedCode = objectAsCode(data, "", data);
     out += generatedCode;
     out += ";" + "\n";
     console.log(out);

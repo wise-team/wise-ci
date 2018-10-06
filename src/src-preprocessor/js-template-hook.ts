@@ -39,23 +39,30 @@ export function jsTemplate (filter: (f: string) => boolean, dataObject: any): So
 
 
 function executeTemplate(data: any, codeLeft: string, value: string, codeRight: string): string {
-    let contextData: any = {
-        data: _.cloneDeep(data),
-        value: value
-    };
-    contextData = _.merge(contextData, templateMethods);
+    try {
+        let contextData: any = {
+            data: _.cloneDeep(data),
+            value: value
+        };
+        contextData = _.merge(contextData, templateMethods);
 
-    const context = vm.createContext(contextData);
-    const leftResult = (codeLeft.trim().length > 0) ? new vm.Script(codeLeft).runInContext(context) : "";
-    const rightResult = (codeRight.trim().length > 0) ? new vm.Script(codeRight).runInContext(context) : "";
-    const result =  leftResult + rightResult;
+        const context = vm.createContext(contextData);
+        const leftResult = (codeLeft.trim().length > 0) ? new vm.Script(codeLeft).runInContext(context) : "";
+        const rightResult = (codeRight.trim().length > 0) ? new vm.Script(codeRight).runInContext(context) : "";
+        const result =  leftResult + rightResult;
 
-    if (
-        (codeLeft.indexOf("allowUndefined()") === -1 && codeRight.indexOf("allowUndefined()") === -1)
-        && result.indexOf("undefined") !== -1
-    )
-        throw new Error("Template evaluation result contains word \"undefined\"! If this is intended, please use allowUndefined() inside the script.");
-    return result;
+        if (
+            (codeLeft.indexOf("allowUndefined()") === -1 && codeRight.indexOf("allowUndefined()") === -1)
+            && result.indexOf("undefined") !== -1
+        )
+            throw new Error("Template evaluation result contains word \"undefined\"! If this is intended, please use allowUndefined() inside the script.");
+        return result;
+    }
+    catch (error) {
+        console.error("Template left: " + codeLeft);
+        console.error("Template right: " + codeRight);
+        throw error;
+    }
 }
 
 
