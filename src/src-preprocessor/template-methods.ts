@@ -18,6 +18,9 @@ export function objectAsCode(v: any, indentation: string = "  ", dataParamForMet
         case "number":
             return v + "";
 
+        case "boolean":
+            return v + "";
+
         case "function":
             const fnCode = v.toString();
             if (fnCode.indexOf("()") === 0) {
@@ -65,6 +68,5 @@ export function outputConfig(data: any): string {
     const generatedCode = objectAsCode(data, "", data);
     out += generatedCode;
     out += ";" + "\n";
-    console.log(out);
     return out;
 }

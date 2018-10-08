@@ -48,7 +48,7 @@ export class SourcePreprocessor {
         for (let i = 0; i < children.length; i++) {
             const child = paths.resolve(path, children[i]);
             const basename = paths.basename(child);
-            if (excludes.filter(e => e === basename).length === 0) {
+            if (this.isIncluded(child) && excludes.filter(e => e === basename).length === 0) {
                 const childStat = fs.lstatSync(child);
                 if (childStat.isDirectory()) {
                     await this.visitDir(child, dataObject, hooks /* here we pass hooks without templater, as it is applied in each dir separately*/, excludes);
@@ -59,6 +59,14 @@ export class SourcePreprocessor {
                 }
             }
         }
+    }
+
+    private isIncluded(path: string): boolean {
+        const extname = paths.extname(path).toLowerCase();
+        if ([ ".jpg", ".jpeg", ".bin", ".png", ".tiff" ].filter(ext => ext === extname).length > 0) return false;
+        const stats = fs.statSync(path);
+        if (stats.size > 1024 * 1024) return false; // block files that are > 1mb.
+        return true;
     }
 }
 

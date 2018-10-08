@@ -25,6 +25,12 @@ export function jsTemplate (filter: (f: string) => boolean, dataObject: any): So
                 (left, value, right) => "<!--" + "§" + left + "§" + "-->" + value + "<!--" + "§" + right + "§." + "-->"
             );
 
+            fileContents = processBlockCommentsTemplates(
+                f, fileContents, dataObject,
+                /#§([^\n]*\n\s*)([^\n)]*)(\n)/gmui,
+                (left, value, right) => "#" + "§" + left + value + right
+            );
+
             if (fileContents !== primaryFileContents) {
                 fs.writeFileSync(f, fileContents);
                 console.log("Modified " + f);
