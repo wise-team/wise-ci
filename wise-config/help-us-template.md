@@ -14,7 +14,7 @@ Thank you for developing WISE together!
 
 
 
-## Like the project? Let @noisy-witness become your favourite witness!
+## Like the project? Let @{witnessAccount} become your favourite witness!
 
-If you use & appreciate our software — you can easily support us. Just cast a vote for "noisy-witness" on your steem account. You can do it here: [https://steemit.com/~witnesses](https://steemit.com/~witnesses).
+If you use & appreciate our software — you can easily support us. Just vote for "{witnessAccount}" to become you one of your witnesses. You can do it here: [https://steemit.com/~witnesses](https://steemit.com/~witnesses).
 

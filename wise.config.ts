@@ -194,8 +194,9 @@ config.repository.readme.generateDefaultBadges = (data: any) => {
 const helpUsTemplateMd = d(fs.readFileSync(__dirname + "/wise-config/help-us-template.md", "UTF-8"));
 config.repository.readme.generateHelpUsMd = (data: any) => {
     return helpUsTemplateMd
-            .replace(new RegExp("{githubOrgName}", "g"), config.repository.github.organization)
-            .replace(new RegExp("{repositoryName}", "g"), data.repository.name);
+            .replace(new RegExp("{githubOrgName}", "g"), d(config.repository.github.organization))
+            .replace(new RegExp("{repositoryName}", "g"), d(data.repository.name))
+            .replace(new RegExp("{witnessAccount}", "g"), d(data.config.witness.account));
 };
 
 const helpTemplateMd = d(fs.readFileSync(__dirname + "/wise-config/help-template.md", "UTF-8"));
