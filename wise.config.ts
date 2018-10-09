@@ -154,8 +154,10 @@ export class Config {
     };
 
     hub = {
-        production: { url: "http://wise.vote/" },
-        development: { url: "http://portal.wise.vote/" },
+        production: {
+            host: "hub.wise.vote",
+            schema: "https" // http or https
+        },
         visual: {
             read: {
                 lastActivity: {
