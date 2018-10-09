@@ -184,7 +184,7 @@ export class Config {
         },
         websites: {
             brokenLinks: {
-                excludes: [ "*linkedin.com*", "http://sql.wise.vote/operations?select=moment,delegator,voter,operation_type&order=moment.desc" ]
+                excludes: [ "*linkedin.com*", this.sql.endpoint.schema + "://" + this.sql.endpoint.host + "/operations?select=moment,delegator,voter,operation_type&order=moment.desc" ]
             },
             forbiddenPhrases: [ "noisy-witness", "noisy witness", "smartvote", "muon"]
         }
@@ -204,9 +204,9 @@ config.repository.readme.badges.push((data: any) => "[![License](https://img.shi
 config.repository.readme.badges.push((data: any) => "[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)");
 config.repository.readme.badges.push((data: any) => "[![Chat](https://img.shields.io/badge/chat%20on%20discord-6b11ff.svg?style=flat-square)](" + d(config.communitation.chat.url) + ")");
 config.repository.readme.badges.push((data: any) => { // wise operations count badge:
-    const apiUrl = "http://" + d(config.sql.endpoint.host) + ":/operations?select=count";
+    const apiUrl = d(config.sql.endpoint.schema) + "://" + d(config.sql.endpoint.host) + ":/operations?select=count";
     const jsonPathQuery = "$[0].count";
-    const apiLink = "http://" + d(config.sql.endpoint.host) + "/operations?select=moment,delegator,voter,operation_type&order=moment.desc";
+    const apiLink = d(config.sql.endpoint.schema) + "://" + d(config.sql.endpoint.host) + "/operations?select=moment,delegator,voter,operation_type&order=moment.desc";
 
     return "[![Wise operations count](https://img.shields.io/badge/dynamic/json.svg?label=wise%20operations%20count&url="
                         + encodeURIComponent(apiUrl) + "&query=" + encodeURIComponent(jsonPathQuery) + "&colorB=blue&style=flat-square)](" + apiLink + ")";
