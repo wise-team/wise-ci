@@ -62,6 +62,13 @@ async function run() {
                 ["$.bugs.url", (obj, value, data) => "https://github.com/" + d(config.repository.github.organization) + "/" + d(data.repository.name) + "/issues"],
             ]
         ),
+
+        // .dockerignore file
+        SP.hooks.ensureChildFile(
+            SP.filters.directoryHasChild("Dockerfile"),
+            ".dockerignore",
+            "/node_modules\n/dist"
+        ),
     ],
     // exclude:
     [ ".vscode" ])

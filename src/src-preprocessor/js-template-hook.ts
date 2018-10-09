@@ -15,20 +15,26 @@ export function jsTemplate (filter: (f: string) => boolean, dataObject: any): So
 
             fileContents = processBlockCommentsTemplates(
                 f, fileContents, dataObject,
-                /\/\*§([^§]*)§\*\/([^§]+)\/\*§([^§]*)§\.\*\//gmui,
-                (left, value, right) => "/*" + "§" + left + "§" + "*/" + value + "/*" + "§" + right + "§." + "*/"
+                /()\/\*§([^§]*)§\*\/([^§]+)\/\*§([^§]*)§\.\*\//gmui,
+                (whitespace, left, value, right) => "/*" + "§" + left + "§" + "*/" + value + "/*" + "§" + right + "§." + "*/"
             );
 
             fileContents = processBlockCommentsTemplates(
                 f, fileContents, dataObject,
-                /<!--§([^§]*)§-->([^§]*)<!--§([^§]*)§\.-->/gmui,
-                (left, value, right) => "<!--" + "§" + left + "§" + "-->" + value + "<!--" + "§" + right + "§." + "-->"
+                /()<!--§([^§]*)§-->([^§]*)<!--§([^§]*)§\.-->/gmui,
+                (whitespace, left, value, right) => "<!--" + "§" + left + "§" + "-->" + value + "<!--" + "§" + right + "§." + "-->"
             );
 
             fileContents = processBlockCommentsTemplates(
                 f, fileContents, dataObject,
-                /#§([^\n]*\n\s*)([^\n)]*)(\n)/gmui,
-                (left, value, right) => "#" + "§" + left + value + right
+                /^(\s*)#§([^\n]*\n\s*)([^\n)]*)(\n)/gmui,
+                (whitespace, left, value, right) => whitespace + "#" + "§" + left + value + right
+            );
+
+            fileContents = processBlockCommentsTemplates(
+                f, fileContents, dataObject,
+                /()##§([^§]*)§##([^§]+)##§([^§]*)§\.##/gmui,
+                (whitespace, left, value, right) => "##" + "§" + left + "§" + "##" + value + "##" + "§" + right + "§." + "##"
             );
 
             if (fileContents !== primaryFileContents) {
@@ -72,7 +78,7 @@ function executeTemplate(data: any, codeLeft: string, value: string, codeRight: 
 }
 
 
-function processBlockCommentsTemplates(f: string, fileContents: string, dataObject: any, regex: RegExp, replacer: (left: string, value: string, right: string) => string): string {
+function processBlockCommentsTemplates(f: string, fileContents: string, dataObject: any, regex: RegExp, replacer: (whitespace: string, left: string, value: string, right: string) => string): string {
     let m;
     while ((m = regex.exec(fileContents)) !== null) {
         // This is necessary to avoid infinite loops with zero-width matches
@@ -80,15 +86,16 @@ function processBlockCommentsTemplates(f: string, fileContents: string, dataObje
             regex.lastIndex++;
         }
 
-        if (m.length >= 4) {
+        if (m.length >= 5) {
             const wholeMatch = m[0];
-            const left = m[1];
-            const value = m[2];
-            const right = m[3];
+            const whitespace = m[1];
+            const left = m[2];
+            const value = m[3];
+            const right = m[4];
             let newValue = "";
             newValue = executeTemplate(dataObject, left, value, right);
 
-            const replacement = replacer(left, newValue, right);
+            const replacement = replacer(whitespace, left, newValue, right);
 
             fileContents = fileContents.replace(wholeMatch, replacement);
         }
