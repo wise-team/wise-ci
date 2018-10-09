@@ -44,7 +44,8 @@ export class Config {
     team = {
         name: "Wise Team",
         website: { url: "https://wise-team.io/" },
-        steem: { account: "wise-team" }
+        steem: { account: "wise-team" },
+        securityEmail: "jedrzejblew@gmail.com"
     };
 
     npm = {
