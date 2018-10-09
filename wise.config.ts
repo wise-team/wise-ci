@@ -116,7 +116,7 @@ export class Config {
                 nodePath: ""
             },
             hub: {
-                name: "../wise-hub",
+                name: "wise-hub",
                 isNode: true,
                 isNpm: true,
                 nodePath: "/wise-hub-frontend"
