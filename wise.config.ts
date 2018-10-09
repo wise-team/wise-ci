@@ -53,6 +53,20 @@ export class Config {
         author: "The " + this.team.name + " (" + this.team.website.url + ")",
     };
 
+    docker = {
+        labels: {
+            domain: "vote.wise",
+            defaultLabels: [
+                (data: any) => '.wise-version="' + this.wise.version + '"',
+                (data: any) => '.license="' + this.license.code + '"',
+                (data: any) => '.repository="' + d(data.repository.name) + '"'
+            ]
+        },
+        maintainer: "The " + this.team.name + " (" + this.team.website.url + ") <" + this.team.securityEmail + ">",
+        generateDockerfileFrontMatter: (data: any) => "LABEL maintainer=\"" + d(data.config.docker.maintainer) + "\"\n"
+                + d(data.config.docker.labels.defaultLabels).map((label: (data: any) => string) => "LABEL " + d(data.config.docker.labels.domain) + label(data)).join("\n")
+    };
+
     repository = {
         github: { organization: "wise-team" },
         readme: {
