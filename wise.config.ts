@@ -143,7 +143,10 @@ export class Config {
             requestConcurrencyPerNode: 3,
             blockProcessingTimeoutMs: 9000
         },
-        endpoint: { host: "sql.wise.vote", schema: "http" }
+        endpoint: {
+            host: "sql.wise.vote",
+            schema: "https" // http or https
+        }
     };
 
     manual = {
