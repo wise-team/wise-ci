@@ -55,6 +55,7 @@ export class Config {
     };
 
     docker = {
+        imageHostname: "wise",
         labels: {
             domain: "vote.wise",
             defaultLabels: [
@@ -146,6 +147,26 @@ export class Config {
         endpoint: {
             host: "sql.wise.vote",
             schema: "https" // http or https
+        },
+        docker: {
+            services: {
+                db: {
+                    name: "wise_sql_db",
+                    container: "wise_sql_db"
+                },
+                pusher: {
+                    name: "wise_sql_pusher",
+                    container: "wise-sql-pusher",
+                    image: this.docker.imageHostname + "/sql-pusher"
+                },
+                postgrest: {
+                    name: "postgrest",
+                    container: "wise-sql-postgrest"
+                }
+            },
+            volumes: {
+                db: { name: "pgdata" }
+            }
         }
     };
 
