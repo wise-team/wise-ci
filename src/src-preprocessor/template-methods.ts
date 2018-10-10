@@ -70,3 +70,7 @@ export function outputConfig(data: any): string {
     out += ";" + "\n";
     return out;
 }
+
+export function sectionSign(): string {
+    return "§";
+}

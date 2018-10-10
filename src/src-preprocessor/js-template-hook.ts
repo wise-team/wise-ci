@@ -33,6 +33,13 @@ export function jsTemplate (filter: (f: string) => boolean, dataObject: any): So
 
             fileContents = processBlockCommentsTemplates(
                 f, fileContents, dataObject,
+                /^(\s*)([^#\n]+)#§<([^\n]*)(\n)/gmui,
+                (whitespace, left, value, right) => whitespace + value + " #" + "§<" + left + right,
+                { whitespace: 1, value: 2, left: 3, right: 4 }
+            );
+
+            fileContents = processBlockCommentsTemplates(
+                f, fileContents, dataObject,
                 /()##§([^§]*)§##([^§]+)##§([^§]*)§\.##/gmui,
                 (whitespace, left, value, right) => "##" + "§" + left + "§" + "##" + value + "##" + "§" + right + "§." + "##"
             );
@@ -49,12 +56,15 @@ export function jsTemplate (filter: (f: string) => boolean, dataObject: any): So
     };
 }
 
-
-function executeTemplate(data: any, codeLeft: string, value: string, codeRight: string): string {
+function executeTemplate(f: string, data: any, codeLeft: string, value: string, codeRight: string): string {
     try {
         let contextData: any = {
             data: _.cloneDeep(data),
-            value: value
+            value: value,
+            __filename: f,
+            __dirname: paths.dirname(f),
+            path: paths,
+            fs: fs
         };
         contextData = _.merge(contextData, templateMethods);
 
@@ -78,7 +88,7 @@ function executeTemplate(data: any, codeLeft: string, value: string, codeRight: 
 }
 
 
-function processBlockCommentsTemplates(f: string, fileContents: string, dataObject: any, regex: RegExp, replacer: (whitespace: string, left: string, value: string, right: string) => string): string {
+function processBlockCommentsTemplates(f: string, fileContents: string, dataObject: any, regex: RegExp, replacer: (whitespace: string, left: string, value: string, right: string) => string, groupOrder: { whitespace: number; left: number; value: number; right: number } = { whitespace: 1, left: 2, value: 3, right: 4 }): string {
     let m;
     while ((m = regex.exec(fileContents)) !== null) {
         // This is necessary to avoid infinite loops with zero-width matches
@@ -88,12 +98,12 @@ function processBlockCommentsTemplates(f: string, fileContents: string, dataObje
 
         if (m.length >= 5) {
             const wholeMatch = m[0];
-            const whitespace = m[1];
-            const left = m[2];
-            const value = m[3];
-            const right = m[4];
+            const whitespace = m[groupOrder.whitespace];
+            const left = m[groupOrder.left];
+            const value = m[groupOrder.value];
+            const right = m[groupOrder.right];
             let newValue = "";
-            newValue = executeTemplate(dataObject, left, value, right);
+            newValue = executeTemplate(f, dataObject, left, value, right);
 
             const replacement = replacer(whitespace, left, newValue, right);
 
