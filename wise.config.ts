@@ -57,17 +57,17 @@ export class Config {
 
     docker = {
         imageHostname: "wise",
+        maintainer: "The " + this.team.name + " (" + this.team.website.url + ") <" + this.team.securityEmail + ">",
         labels: {
             domain: "vote.wise",
             defaultLabels: [
-                (data: any) => '.wise-version="' + this.wise.version + '"',
-                (data: any) => '.license="' + this.license.code + '"',
-                (data: any) => '.repository="' + d(data.repository.name) + '"'
+                (data: any) => 'maintainer="' + d(data.config.docker.maintainer) + '"',
+                (data: any) => d(data.config.docker.labels.domain) + '.wise-version="' + this.wise.version + '"',
+                (data: any) => d(data.config.docker.labels.domain) + '.license="' + this.license.code + '"',
+                (data: any) => d(data.config.docker.labels.domain) + '.repository="' + d(data.repository.name) + '"'
             ]
         },
-        maintainer: "The " + this.team.name + " (" + this.team.website.url + ") <" + this.team.securityEmail + ">",
-        generateDockerfileFrontMatter: (data: any) => "LABEL maintainer=\"" + d(data.config.docker.maintainer) + "\"\n"
-                + d(data.config.docker.labels.defaultLabels).map((label: (data: any) => string) => "LABEL " + d(data.config.docker.labels.domain) + label(data)).join("\n")
+        generateDockerfileFrontMatter: (data: any) => d(data.config.docker.labels.defaultLabels).map((label: (data: any) => string) => "LABEL " + label(data)).join("\n")
     };
 
     repository = {
