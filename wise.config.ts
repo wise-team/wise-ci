@@ -273,4 +273,50 @@ config.repository.readme.generateHelpMd = (data: any) => {
 function d <T> (input: T | undefined): T {
     if (typeof input !== "undefined") return input;
     else throw new Error("Input value is undefined (d() fn)");
+    steemconnect = {
+        owner: {
+            account: "wise.vote",
+            profile: { name: "Wise", website: this.wise.homepage },
+            last_account_update: "2018-07-06T09:47:06",
+            last_owner_update: "1970-01-01T00:00:00",
+            keys: {
+                owner: "STM5qMTthdfQMQREDNxjz3zsKBRY15SfLToNnzPM7RwWddiHwD3Xq",
+                active: "STM8jjcuFn1F96eq8ssbtT7UDJpu8AmkR4sgXBhPT7TCUVaozb57q",
+                posting: "STM7NuCMemrJ6FJza1Ky733AAbwL5dnzAE7jnLEi4waroH8ZoQCof",
+                memo: "STM7F9UXfVpwCbyqonyJawET2WC3jwnV2UT16ubkA7fgqmBDfYK4w"
+            },
+            recovery_account: "noisy"
+        },
+        app: {
+            account: "wisevote.app",
+            last_account_update: "1970-01-01T00:00:00",
+            last_owner_update: "1970-01-01T00:00:00",
+            keys: {
+                owner: "STM82hFUKjN2j8KGqQ8rz9YgFAbMrWFuCPkabtrAnUfV2JQshNPLz",
+                active: "STM78mV5drS6a5SredobAJXvzZv7tvBo4Cj15rumRcBtMzTWT173a",
+                posting: "STM6ZVzWQvbYSzVpY2PRJHu7QSASVy8aB8xSVcJgx5seYGHPFvJkZ",
+                memo: "STM7o1DigBaUEF28n2ap5PeY9Jqhndz3zWmF7xZ3zfRgSqeLaMnyA"
+            },
+            recovery_account: "wise.vote"
+        },
+        settings: {
+            id: 493,
+            client_id: "wisevote.app",
+            owner: "wise.vote",
+            redirect_uris: [
+              this.votingPage.url + "/",
+              this.hub.production.schema + "://" + this.hub.production.host + "/",
+              "http://localhost:8080/"
+            ],
+            name: "WISE",
+            description: "Vote delegation system for STEEM blockchain: " + this.wise.homepage,
+            icon: this.wise.homepage + "assets/wise-full-color-icon-128.png",
+            website: this.wise.homepage,
+            beneficiaries: null,
+            is_public: false,
+            is_disabled: false,
+            created_at: "2018-07-06T09:53:05.827Z",
+            updated_at: "2018-09-21T13:20:47.021Z"
+          }
+    };
 }
