@@ -1,4 +1,10 @@
+/* tslint:disable no-null-keyword */
 import * as fs from "fs";
+
+function d <T> (input: T | undefined): T {
+    if (typeof input !== "undefined") return input;
+    else throw new Error("Input value is undefined (d() fn)");
+}
 
 export class Config {
     license = {
@@ -73,10 +79,55 @@ export class Config {
     repository = {
         github: { organization: "wise-team" },
         readme: {
-            badges: [] as ((data: any) => string) [],
-            generateHelpUsMd: (data: any) => "" ,
-            generateHelpMd: (data: any) => "",
-            generateDefaultBadges: (data: any) => "",
+            badges: [
+                (data: any) => ({
+                    title: "License",
+                    image: "https://img.shields.io/github/license/" + d(data.config.repository.github.organization) + "/" + d(data.repository.name) + ".svg?style=flat-square",
+                    link: "https://github.com/" + d(data.config.repository.github.organization) + "/" + d(data.repository.name) + "/blob/master/LICENSE"
+                }),
+                (data: any) => ({
+                    title: "PRs Welcome",
+                    image: "https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square",
+                    link: "http://makeapullrequest.com"
+                }),
+                (data: any) => ({ // [![]()](" + + ")"
+                    title: "Chat",
+                    image: "https://img.shields.io/badge/chat%20on%20" + d(data.config.communitation.chat.name) + "-6b11ff.svg?style=flat-square",
+                    link: d(data.config.communitation.chat.url)
+                }),
+                (data: any) => ({
+                    title: "Wise operations count",
+                    image: "https://img.shields.io/badge/dynamic/json.svg?label=wise%20operations%20count"
+                        + "&url=" + encodeURIComponent(d(config.sql.endpoint.schema) + "://" + d(config.sql.endpoint.host) + ":/operations?select=count")
+                        + "&query=" + encodeURIComponent("$[0].count")
+                        + "&colorB=blue&style=flat-square",
+                    link: d(config.sql.endpoint.schema) + "://" + d(config.sql.endpoint.host) + "/operations?select=moment,delegator,voter,operation_type&order=moment.desc"
+                }),
+            ],
+            generateDefaultBadges: (data: any) => {
+                let npmBadge: string = "";
+                if (data.npm) npmBadge = "[![npm](https://img.shields.io/npm/v/" + d(data.npm.package) + ".svg?style=flat-square)](https://www.npmjs.com/package/" + d(data.npm.package) + ") ";
+                return "\n" + npmBadge
+                    + config.repository.readme.badges.map((badge: any) => {
+                        const badgeObj = badge(data, d);
+                        return "[![" + badgeObj.title + "](" + badgeObj.image + ")](" + badgeObj.link + ")";
+                    }).join(" ") + "\n";
+            },
+            generateHelpUsMd: (data: any) => {
+                const helpUsTemplateMd = d(fs.readFileSync(__dirname + "/wise-config/help-us-template.md", "UTF-8"));
+                return helpUsTemplateMd
+                        .replace(new RegExp("{githubOrgName}", "g"), d(config.repository.github.organization))
+                        .replace(new RegExp("{repositoryName}", "g"), d(data.repository.name))
+                        .replace(new RegExp("{witnessAccount}", "g"), d(data.config.witness.account));
+            },
+            generateHelpMd: (data: any) => {
+                const helpTemplateMd = d(fs.readFileSync(__dirname + "/wise-config/help-template.md", "UTF-8"));
+                return helpTemplateMd
+                        .replace(new RegExp("{githubOrgName}", "g"), config.repository.github.organization)
+                        .replace(new RegExp("{manualUrl}", "g"), config.manual.url)
+                        .replace(new RegExp("{chatUrl}", "g"), config.communitation.chat.url)
+                        .replace(new RegExp("{repositoryName}", "g"), data.repository.name);
+            },
         },
         repositories: {
             core: {
@@ -175,6 +226,10 @@ export class Config {
         url: "https://wise.vote/introduction"
     };
 
+    votingPage = {
+        url: "https://wise.vote/voting-page"
+    };
+
     hub = {
         production: {
             host: "hub.wise.vote",
@@ -188,6 +243,15 @@ export class Config {
                     articleLinkBase: "https://steemit.com/@{author}/{permlink}"
                 }
             }
+        },
+        docker: {
+            services: {
+                frontend: {
+                    name: "frontend",
+                    container: "wise-hub-frontend",
+                    image: this.docker.imageHostname + "/wise-hub-frontend"
+                }
+            },
         }
     };
 
@@ -224,55 +288,7 @@ export class Config {
         { url: this.team.website.url, checkBrokenLinks: true },
         { url: this.manual.url, checkBrokenLinks: false /* it is a part of wise homepage */ },
     ];
-}
 
-export const config = new Config();
-
-// badges:
-config.repository.readme.badges.push((data: any) => "[![License](https://img.shields.io/github/license/" + d(config.repository.github.organization) + "/" + d(data.repository.name) + ".svg?style=flat-square)](https://github.com/" + d(config.repository.github.organization) + "/" + d(data.repository.name) + "/blob/master/LICENSE)");
-config.repository.readme.badges.push((data: any) => "[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)");
-config.repository.readme.badges.push((data: any) => "[![Chat](https://img.shields.io/badge/chat%20on%20discord-6b11ff.svg?style=flat-square)](" + d(config.communitation.chat.url) + ")");
-config.repository.readme.badges.push((data: any) => { // wise operations count badge:
-    const apiUrl = d(config.sql.endpoint.schema) + "://" + d(config.sql.endpoint.host) + ":/operations?select=count";
-    const jsonPathQuery = "$[0].count";
-    const apiLink = d(config.sql.endpoint.schema) + "://" + d(config.sql.endpoint.host) + "/operations?select=moment,delegator,voter,operation_type&order=moment.desc";
-
-    return "[![Wise operations count](https://img.shields.io/badge/dynamic/json.svg?label=wise%20operations%20count&url="
-                        + encodeURIComponent(apiUrl) + "&query=" + encodeURIComponent(jsonPathQuery) + "&colorB=blue&style=flat-square)](" + apiLink + ")";
-});
-config.repository.readme.generateDefaultBadges = (data: any) => {
-    let npmBadge: string = "";
-    if (data.npm) npmBadge = "[![npm](https://img.shields.io/npm/v/" + d(data.npm.package) + ".svg?style=flat-square)](https://www.npmjs.com/package/" + d(data.npm.package) + ") ";
-    return "\n" + npmBadge + config.repository.readme.badges.map((badge: any) => badge(data, d)).join(" ") + "\n";
-};
-
-
-
-// README templates:
-const helpUsTemplateMd = d(fs.readFileSync(__dirname + "/wise-config/help-us-template.md", "UTF-8"));
-config.repository.readme.generateHelpUsMd = (data: any) => {
-    return helpUsTemplateMd
-            .replace(new RegExp("{githubOrgName}", "g"), d(config.repository.github.organization))
-            .replace(new RegExp("{repositoryName}", "g"), d(data.repository.name))
-            .replace(new RegExp("{witnessAccount}", "g"), d(data.config.witness.account));
-};
-
-const helpTemplateMd = d(fs.readFileSync(__dirname + "/wise-config/help-template.md", "UTF-8"));
-config.repository.readme.generateHelpMd = (data: any) => {
-    return helpTemplateMd
-            .replace(new RegExp("{githubOrgName}", "g"), config.repository.github.organization)
-            .replace(new RegExp("{manualUrl}", "g"), config.manual.url)
-            .replace(new RegExp("{chatUrl}", "g"), config.communitation.chat.url)
-            .replace(new RegExp("{repositoryName}", "g"), data.repository.name);
-};
-
-
-
-
-// Utils:
-function d <T> (input: T | undefined): T {
-    if (typeof input !== "undefined") return input;
-    else throw new Error("Input value is undefined (d() fn)");
     steemconnect = {
         owner: {
             account: "wise.vote",
@@ -320,3 +336,5 @@ function d <T> (input: T | undefined): T {
           }
     };
 }
+
+export const config = new Config();
