@@ -8,6 +8,8 @@ export function d <T> (input: T | undefined): T {
 }
 
 export function objectAsCode(v: any, indentation: string = "  ", dataParamForMethods: any = {}): string {
+    if (v === null) return "null";
+
     switch (typeof v) {
         case "undefined":
             return "undefined";
