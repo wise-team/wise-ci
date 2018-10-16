@@ -192,16 +192,23 @@ export class Config {
     };
 
     test = {
-        live: {
+        healthcheck: {
             metrics: {
                 periodMs: 3 * 24 * 3600 * 1000 // 3 days
             },
             inBrowserTests: {
-                enabled: true,
+                enabled: false,
                 browsers: [ "firefox" ]
             },
             api: {
                 testThroughProxy: false
+            },
+            log: {
+                dockerVolume: "wise.test.logs"
+            },
+            slack: {
+                mentionUsers: [ /* jblew: */"UAEGKTY3T" ], // it sends private messages only once, when a test turns red. Requires a slack ID (can be found in profile settings)
+                webhookUrlFilePath: "/opt/wise/slackWebhook.url"
             }
         },
         websites: {
