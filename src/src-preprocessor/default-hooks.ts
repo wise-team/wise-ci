@@ -43,7 +43,7 @@ export function ensureChildDirectory (filter: (f: string) => boolean, dirname: s
     };
 }
 
-export function jsonPathRules (filter: (f: string) => boolean, rules: [string, (obj: any, value: any, data?: any) => any] []): SourcePreprocessor.Hook {
+export function jsonPathRules (filter: (f: string) => boolean, rules: [string, (obj: any, value: any, data?: any) => any, { doNotCreate?: boolean }] []): SourcePreprocessor.Hook {
     return async (f: string, data: any) => {
         if (!filter(f)) return;
 
@@ -51,9 +51,10 @@ export function jsonPathRules (filter: (f: string) => boolean, rules: [string, (
         const primaryObj = JSON.parse(fileContents);
         const obj = _.cloneDeep(primaryObj);
         rules.forEach(rule => {
+            const options = rule[2];
             const matches: any [] = jsonpath.query(obj, rule[0]);
             if (matches.length === 0) {
-                jsonpath.value(obj, rule[0], rule[1](obj, undefined, data));
+                if (!options.doNotCreate) jsonpath.value(obj, rule[0], rule[1](obj, undefined, data));
             }
             else jsonpath.apply(obj, rule[0], (value) => rule[1](obj, value, data));
         });

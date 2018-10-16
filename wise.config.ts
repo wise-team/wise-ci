@@ -12,7 +12,7 @@ export class Config {
     };
 
     wise = {
-        version: "1.2.2",
+        version: "2.0.0",
         homepage: "https://wise.vote/"
     };
 
@@ -56,7 +56,7 @@ export class Config {
     };
 
     npm = {
-        node: { version: "9.11" },
+        node: { version: "10.12" },
         keywords: [ "steem", "blockchain", "wise" ],
         author: "The " + this.team.name + " (" + this.team.website.url + ")",
     };

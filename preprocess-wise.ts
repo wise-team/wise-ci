@@ -47,19 +47,25 @@ async function run() {
             ("v" + d(config.npm.node.version))
         ),
 
+        SP.hooks.regexpReplace(
+            SP.filters.isFileNamed(".nvmrc"),
+            /^.*$/gui, ("v" + d(config.npm.node.version))
+        ),
+
         // package.json rules
         SP.hooks.jsonPathRules(
             SP.filters.isFileNamed("package.json"),
             [
-                ["$.version", (obj, value) => d(config.wise.version)],
-                ["$.engines.node", (obj, value) => ">=" + d(config.npm.node.version)],
-                ["$.repository.type", (obj, value) => "git"],
-                ["$.repository.url", (obj, value, data) => "git+https://github.com/" + d(config.repository.github.organization) + "/" + d(data.repository.name) + ".git"],
-                ["$.keywords", (obj, value) => d(config.npm.keywords)],
-                ["$.author", (obj, value) => d(config.npm.author)],
-                ["$.license", (obj, value) => d(config.license.code)],
-                ["$.homepage", (obj, value) => d(config.wise.homepage)],
-                ["$.bugs.url", (obj, value, data) => "https://github.com/" + d(config.repository.github.organization) + "/" + d(data.repository.name) + "/issues"],
+                ["$.version", (obj, value) => d(config.wise.version), {}],
+                ["$.engines.node", (obj, value) => ">=" + d(config.npm.node.version), {}],
+                ["$.repository.type", (obj, value) => "git", {}],
+                ["$.repository.url", (obj, value, data) => "git+https://github.com/" + d(config.repository.github.organization) + "/" + d(data.repository.name) + ".git", {}],
+                ["$.keywords", (obj, value) => d(config.npm.keywords), {}],
+                ["$.author", (obj, value) => d(config.npm.author), {}],
+                ["$.license", (obj, value) => d(config.license.code), {}],
+                ["$.homepage", (obj, value) => d(config.wise.homepage), {}],
+                ["$.bugs.url", (obj, value, data) => "https://github.com/" + d(config.repository.github.organization) + "/" + d(data.repository.name) + "/issues", {}],
+                ["$.dependencies[\"steem-wise-core\"]", (obj, value, data) => "^" + d(config.wise.version), { doNotCreate: true }],
             ]
         ),
 
