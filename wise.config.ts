@@ -13,6 +13,7 @@ export class Config {
     steem = {
         minimalApiBlockchainVersion: "0.20.5",
         minimalApiHardforkVersion: "0.20.0",
+        defaultApiUrl: "https://api.steemit.com",
         apis: [
             { url: "https://api.steemit.com", get_block: true },
             { url: "https://steemd.minnowsupportproject.org", get_block: true },
