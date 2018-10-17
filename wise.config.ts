@@ -192,6 +192,9 @@ export class Config {
     };
 
     sql = {
+        protocol: {
+            version: "1.0"
+        },
         pusher: {
             requestConcurrencyPerNode: 3,
             blockProcessingTimeoutMs: 9000
