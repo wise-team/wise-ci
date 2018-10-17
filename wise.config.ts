@@ -214,7 +214,11 @@ export class Config {
                 postgrest: {
                     name: "postgrest",
                     container: "wise-sql-postgrest"
-                }
+                },
+                api_proxy: {
+                    name: "wise_sql_api_proxy",
+                    container: "wise_sql_api_proxy"
+                },
             },
             volumes: {
                 db: { name: "pgdata" }
