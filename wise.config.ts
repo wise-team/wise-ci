@@ -329,10 +329,10 @@ export class Config {
             icon: this.wise.homepage + "assets/wise-full-color-icon-128.png",
             website: this.wise.homepage,
             beneficiaries: null,
-            is_public: false,
+            is_public: true,
             is_disabled: false,
             created_at: "2018-07-06T09:53:05.827Z",
-            updated_at: "2018-09-21T13:20:47.021Z"
+            updated_at: "2018-10-16T15:00:15.365Z"
           }
     };
 }
