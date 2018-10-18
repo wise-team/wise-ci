@@ -21,7 +21,13 @@ export class SourcePreprocessor {
     private async visitFile(path_: string, dataObject: any, hooks: SourcePreprocessor.Hook []) {
         const path = paths.resolve(path_);
         for (let i = 0; i < hooks.length; i++) {
-            await hooks[i](path, dataObject);
+            try {
+                await hooks[i](path, dataObject);
+            }
+            catch (e) {
+                console.error("Error while preprocessing hook in " + path + ":");
+                console.error(e);
+            }
         }
     }
 
