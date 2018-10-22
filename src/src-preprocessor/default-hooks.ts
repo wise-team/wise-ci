@@ -60,7 +60,7 @@ export function jsonPathRules (filter: (f: string) => boolean, rules: [string, (
         });
 
         if (!_.isEqual(primaryObj, obj)) {
-            const newFileContents = JSON.stringify(obj, undefined, 2);
+            const newFileContents = JSON.stringify(obj, undefined, 2) + "\n";
             fs.writeFileSync(f, newFileContents);
             console.log("Modified " + f);
         }

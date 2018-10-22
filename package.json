@@ -1,13 +1,12 @@
 {
   "name": "wise-ci",
-  "version": "2.0.0",
+  "version": "2.2.2",
   "description": "CI tools & config for Wise",
   "directories": {},
   "engines": {
     "node": ">=10.12"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "@commitlint/cli": "^7.1.2",
     "@commitlint/config-conventional": "^7.1.2",

@@ -69,6 +69,14 @@ async function run() {
             ]
         ),
 
+        // package-lock.json rules
+        SP.hooks.jsonPathRules(
+            SP.filters.isFileNamed("package-lock.json"),
+            [
+                ["$.version", (obj, value) => d(config.wise.version), {}],
+            ]
+        ),
+
         // .dockerignore file
         SP.hooks.ensureChildFile(
             SP.filters.directoryHasChild("Dockerfile"),

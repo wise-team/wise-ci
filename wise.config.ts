@@ -12,7 +12,7 @@ export class Config {
     };
 
     wise = {
-        version: "2.1.0",
+        version: "2.2.2",
         homepage: "https://wise.vote/"
     };
 
@@ -26,7 +26,7 @@ export class Config {
             { url: "https://rpc.buildteam.io", get_block: true },
             { url: "https://rpc.steemliberator.com", get_block: true }, /* http (plain) also works */
             // unstable: { url: "wss://rpc.steemviz.com", get_block: true }, /* ws (plain) also works */
-            { url: "https://steemd.privex.io", get_block: true },
+            // looks like we got banned at wise.vote server IP { url: "https://steemd.privex.io", get_block: true }
             // worked, but stopped to work: { url: "wss://steemd.privex.io", get_block: true }, /* all protocols work: ws, wss, http, https */
 
             // check! { url: "wss://gtg.steem.house:8090", get_block: true },
@@ -267,6 +267,18 @@ export class Config {
         healthcheck: {
             metrics: {
                 periodMs: 3 * 24 * 3600 * 1000 // 3 days
+            },
+            hostedLogs: {
+                host: "test.wise.vote",
+                tls: "yes"
+            },
+            docker: {
+                services: {
+                    hostedLogs: {
+                        name: "wise_healthcheck_hosted_logs",
+                        container: "wise_healthcheck_hosted_logs"
+                    }
+                }
             },
             inBrowserTests: {
                 enabled: false,
