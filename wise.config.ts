@@ -291,7 +291,8 @@ export class Config {
                 dockerVolume: "wise.test.logs"
             },
             slack: {
-                mentionUsers: [ /* jblew: */"UAEGKTY3T" ], // it sends private messages only once, when a test turns red. Requires a slack ID (can be found in profile settings)
+                // it sends private messages only once, when a test turns red. Requires a slack ID (can be found in profile settings)
+                mentionUsers: [ /* jblew -> */"UAEGKTY3T", /* noisy -> */"UASN9CGJ0" ],
                 webhookUrlFilePath: "/opt/wise/slackWebhook.url"
             }
         },
