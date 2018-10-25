@@ -13,7 +13,7 @@ export class Config {
     };
 
     wise = {
-        version: "2.2.2",
+        version: "2.2.5",
         homepage: "https://wise.vote/"
     };
 
@@ -59,11 +59,13 @@ export class Config {
     environments = {
         production: {
             host: "wise.vote",
-            protocol: "https"
+            protocol: "https",
+            deployBranch: "master"
         },
         staging: {
             host: "dev.wise.vote",
-            protocol: "http"
+            protocol: "http",
+            deployBranch: "staging"
         }
     };
 

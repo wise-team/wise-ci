@@ -1,6 +1,6 @@
 {
   "name": "wise-ci",
-  "version": "2.2.2",
+  "version": "2.2.5",
   "description": "CI tools & config for Wise",
   "directories": {},
   "engines": {
