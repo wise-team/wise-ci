@@ -1,5 +1,6 @@
 /* tslint:disable no-null-keyword */
 import * as fs from "fs";
+import * as _ from "lodash";
 
 function d <T> (input: T | undefined): T {
     if (typeof input !== "undefined") return input;
@@ -53,6 +54,17 @@ export class Config {
         website: { url: "https://wise-team.io/" },
         steem: { account: "wise-team" },
         securityEmail: "jedrzejblew@gmail.com"
+    };
+
+    environments = {
+        staging: {
+            host: "wise.vote",
+            protocol: "https"
+        },
+        production: {
+            host: "dev.wise.vote",
+            protocol: "http"
+        }
     };
 
     npm = {
@@ -192,6 +204,8 @@ export class Config {
     };
 
     sql = {
+        // the following param sets the protocol and domain. If you change it, the server configuration changes
+        url: _.mapValues(this.environments, env => env.protocol + "://sql." + env.host + "/"),
         protocol: {
             version: "1.0",
             maxRowsPerPage: 1000
@@ -199,10 +213,6 @@ export class Config {
         pusher: {
             requestConcurrencyPerNode: 3,
             blockProcessingTimeoutMs: 9000
-        },
-        endpoint: {
-            host: "sql.wise.vote",
-            schema: "https" // http or https
         },
         docker: {
             services: {
@@ -231,18 +241,38 @@ export class Config {
     };
 
     manual = {
-        url: "https://wise.vote/introduction"
+        // this does not set the host nor the port, it is only referenced in docs and so on
+        url: _.mapValues(this.environments, env => env.protocol + "://" + env.host + "/introduction"),
+        docker: {
+            services: {
+                frontend: {
+                    name: "frontend",
+                    container: "wise-manual",
+                    image: this.docker.imageHostname + "/manual",
+                    port: 4000 // this is used in caddy config
+                }
+            }
+        }
     };
 
     votingPage = {
-        url: "https://wise.vote/voting-page"
+        // this does not set the host nor the port, it is only referenced in docs and so on
+        url: _.mapValues(this.environments, env => env.protocol + "://" + env.host + "/voting-page"),
+        docker: {
+            services: {
+                frontend: {
+                    name: "site",
+                    container: "voting-page",
+                    image: this.docker.imageHostname + "/voting-page",
+                    port: 8080 // this is used in caddy config
+                }
+            }
+        }
     };
 
     hub = {
-        production: {
-            host: "hub.wise.vote",
-            schema: "https" // http or https
-        },
+        // the following param sets the protocol and domain. If you change it, the server configuration changes
+        url: _.mapValues(this.environments, env => env.protocol + "://hub." + env.host + "/"),
         visual: {
             read: {
                 lastActivity: {
@@ -269,8 +299,8 @@ export class Config {
                 periodMs: 3 * 24 * 3600 * 1000 // 3 days
             },
             hostedLogs: {
-                host: "test.wise.vote",
-                tls: "yes"
+                // the following param sets the protocol and domain. If you change it, the server configuration changes
+                url: _.mapValues(this.environments, env => env.protocol + "://test." + env.host + "/"),
             },
             docker: {
                 services: {
@@ -298,7 +328,7 @@ export class Config {
         },
         websites: {
             brokenLinks: {
-                excludes: [ "*linkedin.com*", this.sql.endpoint.schema + "://" + this.sql.endpoint.host + "/operations?select=moment,delegator,voter,operation_type&order=moment.desc" ]
+                excludes: [ "*linkedin.com*", "*/operations?select=moment,delegator,voter,operation_type&order=moment.desc" ]
             },
             forbiddenPhrases: [ "noisy-witness", "noisy witness", "smartvote", "muon"]
         }
@@ -307,7 +337,7 @@ export class Config {
     websites = [
         { url: this.wise.homepage, checkBrokenLinks: true },
         { url: this.team.website.url, checkBrokenLinks: true },
-        { url: this.manual.url, checkBrokenLinks: false /* it is a part of wise homepage */ },
+        { url: this.manual.url.production, checkBrokenLinks: false /* it is a part of wise homepage */ },
     ];
 
     steemconnect = {
@@ -347,8 +377,11 @@ export class Config {
             client_id: "wisevote.app",
             owner: "wise.vote",
             redirect_uris: [
-              this.votingPage.url + "/",
-              this.hub.production.schema + "://" + this.hub.production.host + "/",
+                this.votingPage.url.production,
+                this.hub.url.production,
+              // TODO decide wheather add staging urls to steemconnect (could be dangerous)
+              /*... _.values(this.votingPage.url),
+              ... _.values(this.hub.url),*/
               "http://localhost:8080/"
             ],
             name: "WISE",
