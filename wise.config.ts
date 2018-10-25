@@ -57,11 +57,11 @@ export class Config {
     };
 
     environments = {
-        staging: {
+        production: {
             host: "wise.vote",
             protocol: "https"
         },
-        production: {
+        staging: {
             host: "dev.wise.vote",
             protocol: "http"
         }
@@ -110,10 +110,10 @@ export class Config {
                 (data: any) => ({
                     title: "Wise operations count",
                     image: "https://img.shields.io/badge/dynamic/json.svg?label=wise%20operations%20count"
-                        + "&url=" + encodeURIComponent(d(config.sql.endpoint.schema) + "://" + d(config.sql.endpoint.host) + ":/operations?select=count")
+                        + "&url=" + encodeURIComponent(d(data.config.sql.url.production) + "operations?select=count")
                         + "&query=" + encodeURIComponent("$[0].count")
                         + "&colorB=blue&style=flat-square",
-                    link: d(config.sql.endpoint.schema) + "://" + d(config.sql.endpoint.host) + "/operations?select=moment,delegator,voter,operation_type&order=moment.desc"
+                    link: d(data.config.sql.url.production) + "operations?select=moment,delegator,voter,operation_type&order=moment.desc"
                 }),
             ],
             generateDefaultBadges: (data: any) => {
@@ -136,7 +136,7 @@ export class Config {
                 const helpTemplateMd = d(fs.readFileSync(__dirname + "/wise-config/help-template.md", "UTF-8"));
                 return helpTemplateMd
                         .replace(new RegExp("{githubOrgName}", "g"), config.repository.github.organization)
-                        .replace(new RegExp("{manualUrl}", "g"), config.manual.url)
+                        .replace(new RegExp("{manualUrl}", "g"), config.manual.url.production)
                         .replace(new RegExp("{chatUrl}", "g"), config.communitation.chat.url)
                         .replace(new RegExp("{repositoryName}", "g"), data.repository.name);
             },

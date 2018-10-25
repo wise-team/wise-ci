@@ -1,4 +1,5 @@
 import * as _ from "lodash";
+import { URL } from "url";
 
 export function allowUndefined() {} // this function is only used to mark code which allows undefined keyword.
 
@@ -75,4 +76,8 @@ export function outputConfig(data: any): string {
 
 export function sectionSign(): string {
     return "§";
+}
+
+export function url(toBeParsedAsUrl: string): URL {
+    return new URL(toBeParsedAsUrl);
 }
