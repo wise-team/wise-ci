@@ -259,7 +259,7 @@ export class Config {
 
     votingPage = {
         // this does not set the host nor the port, it is only referenced in docs and so on
-        url: _.mapValues(this.environments, env => env.protocol + "://" + env.host + "/voting-page"),
+        url: _.mapValues(this.environments, env => env.protocol + "://" + env.host + "/voting-page/"),
         docker: {
             services: {
                 frontend: {
