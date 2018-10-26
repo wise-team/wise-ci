@@ -63,7 +63,7 @@ export class Config {
             deployBranch: "master"
         },
         staging: {
-            host: "dev.wise.vote",
+            host: "dev.wise.jblew.pl",
             protocol: "http",
             deployBranch: "staging"
         }
