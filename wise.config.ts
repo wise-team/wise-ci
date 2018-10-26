@@ -64,7 +64,7 @@ export class Config {
         },
         staging: {
             host: "dev.wise.jblew.pl",
-            protocol: "http",
+            protocol: "https",
             deployBranch: "staging"
         }
     };
