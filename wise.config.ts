@@ -23,9 +23,9 @@ export class Config {
         defaultApiUrl: "https://api.steemit.com",
         apis: [
             { url: "https://api.steemit.com", get_block: true },
-            { url: "https://steemd.minnowsupportproject.org", get_block: true },
+            // temporarily disable, but works { url: "https://steemd.minnowsupportproject.org", get_block: true },
             { url: "https://rpc.buildteam.io", get_block: true },
-            { url: "https://rpc.steemliberator.com", get_block: true }, /* http (plain) also works */
+            // temporarily disable but works { url: "https://rpc.steemliberator.com", get_block: true }, /* http (plain) also works */
             // unstable: { url: "wss://rpc.steemviz.com", get_block: true }, /* ws (plain) also works */
             // looks like we got banned at wise.vote server IP { url: "https://steemd.privex.io", get_block: true }
             // worked, but stopped to work: { url: "wss://steemd.privex.io", get_block: true }, /* all protocols work: ws, wss, http, https */
