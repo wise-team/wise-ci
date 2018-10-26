@@ -193,8 +193,13 @@ export class Config {
                 isNode: true,
                 isNpm: true,
                 nodePath: ""
+            },
+            typesForSteemJs: {
+                name: "types-for-steem-js",
+                isNode: false,
+                isNpm: true,
+                nodePath: ""
             }
-
         }
     };
 
