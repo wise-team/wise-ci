@@ -219,7 +219,8 @@ export class Config {
         },
         pusher: {
             requestConcurrencyPerNode: 3,
-            blockProcessingTimeoutMs: 9000
+            blockProcessingTimeoutMs: 9000,
+            nextBlockDelayMs: 2900,
         },
         docker: {
             services: {
@@ -388,7 +389,7 @@ export class Config {
                 this.hub.url.production,
               // TODO decide wheather add staging urls to steemconnect (could be dangerous)
               /*... _.values(this.votingPage.url),
-              ... _.values(this.hub.url),*/
+              ... _.values(this.hub.url),*/ // TODO
               "http://localhost:8080/"
             ],
             name: "WISE",
