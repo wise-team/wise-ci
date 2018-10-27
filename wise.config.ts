@@ -42,7 +42,8 @@ export class Config {
             // 301: { url: "http://seed.bitcoiner.me", get_block: true }, { url: "https://seed.bitcoiner.me", get_block: true }, { url: "ws://seed.bitcoiner.me", get_block: true }, { url: "wss://seed.bitcoiner.me", get_block: true },
             // 502: { url: "http://appbasetest.timcliff.com", get_block: true }, { url: "https://appbasetest.timcliff.com", get_block: true }, { url: "ws://appbasetest.timcliff.com", get_block: true }, { url: "wss://appbasetest.timcliff.com", get_block: true },
             // inaccessible: { url: "http://appbase.buildteam.io", get_block: true }, { url: "https://appbase.buildteam.io", get_block: true }, { url: "ws://appbase.buildteam.io", get_block: true }, { url: "wss://appbase.buildteam.io", get_block: true },
-        ]
+        ],
+        waitForNextHeadBlockDelayMs: 3100
     };
 
     witness = {
@@ -220,7 +221,7 @@ export class Config {
         pusher: {
             requestConcurrencyPerNode: 3,
             blockProcessingTimeoutMs: 9000,
-            nextBlockDelayMs: 2900,
+            nextBlockDelayMs: this.steem.waitForNextHeadBlockDelayMs,
         },
         docker: {
             services: {
