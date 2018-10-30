@@ -13,7 +13,7 @@ export class Config {
     };
 
     wise = {
-        version: "2.2.5",
+        version: "2.3.1",
         homepage: "https://wise.vote/"
     };
 
@@ -204,6 +204,20 @@ export class Config {
         }
     };
 
+    vault = {
+        url: "https://127.0.0.1:8200",
+        backendFilePath: "/opt/wise/data/Vaultfile",
+        docker: {
+            services: {
+                vault: {
+                    name: "vault",
+                    container: "wise-vault",
+                    image: this.docker.imageHostname + "/vault"
+                }
+            }
+        }
+    };
+
     communitation = {
         chat: {
             name: "discord",
@@ -297,6 +311,10 @@ export class Config {
                     name: "frontend",
                     container: "wise-hub-frontend",
                     image: this.docker.imageHostname + "/wise-hub-frontend"
+                },
+                vault: {
+                    name: "vault",
+                    container: "wise-hub-vault"
                 }
             },
         }
