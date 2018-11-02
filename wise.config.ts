@@ -216,6 +216,10 @@ export class Config {
                 }
             }
         },
+        unseal: {
+            secret_shares: 4,
+            secret_threshold: 2
+        },
         policies: (config: Config) => [
             config.hub.vault.policies.api,
             config.hub.vault.policies.daemon
