@@ -16,7 +16,7 @@ export function objectAsCode(v: any, indentation: string = "  ", dataParamForMet
             return "undefined";
 
         case "string":
-            return "\"" + v + "\"";
+            return "\"" + v.replace(/(?:\r\n|\r|\n)/g, "\\n").replace(/\"/g, "\\\"") + "\"";
 
         case "number":
             return v + "";
