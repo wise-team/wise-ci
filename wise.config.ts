@@ -306,7 +306,6 @@ export class Config {
         visual: {
             read: {
                 lastActivity: {
-                    numOfOpsToShow: 50,
                     trxLinkBase: "https://steemd.com/tx/{trx}",
                     articleLinkBase: "https://steemit.com/@{author}/{permlink}"
                 }
@@ -314,16 +313,62 @@ export class Config {
         },
         docker: {
             services: {
-                frontend: {
-                    name: "frontend",
-                    container: "wise-hub-frontend",
-                    image: this.docker.imageHostname + "/wise-hub-frontend"
+                nginx: {
+                    name: "nginx",
+                    container: "wise-hub-serve"
                 },
-                vault: {
-                    name: "vault",
-                    container: "wise-hub-vault"
+                redis: {
+                    name: "redis",
+                    container: "wise-hub-redis"
+                },
+                api: {
+                    name: "api",
+                    container: "wise-hub-api",
+                    image: this.docker.imageHostname + "/hub-api",
+                    appRole: {
+                        role: "wise-hub-api",
+                        policies: (config: Config) => [ config.hub.vault.policies.api.name ],
+                        secretMount: "/secret/api-role.json"
+                    }
+                },
+                daemon: {
+                    name: "daemon",
+                    container: "wise-hub-daemon",
+                    image: this.docker.imageHostname + "/hub-daemon",
+                    appRole: {
+                        role: "wise-hub-daemon",
+                        policies: (config: Config) => [ config.hub.vault.policies.daemon.name ],
+                        secretMount: "/secret/daemon-role.json"
+                    }
                 }
             },
+        },
+        vault: {
+            secrets: {
+
+            },
+            policies: {
+                api: {
+                    name: "wise-hub-api",
+                    policy: `
+                    # Manage hub/public secrets
+                    path "secret/hub/public/*"
+                    {
+                      capabilities = ["create", "read", "update", "delete", "list"]
+                    }
+                    `
+                },
+                daemon: {
+                    name: "wise-hub-daemon",
+                    policy: `
+                    # Manage hub/public secrets
+                    path "secret/hub/public/*"
+                    {
+                      capabilities = ["create", "read", "update", "delete", "list"]
+                    }
+                    `
+                }
+            }
         }
     };
 
@@ -432,3 +477,44 @@ export class Config {
 }
 
 export const config = new Config();
+/*
+function evaulateObject(v: any, config: Config) {
+    const out: any = {};
+
+    _.forOwn(v, (value, ownPropName) => {
+        const prop = v[ownPropName];
+
+        if (typeof prop === "function") {
+            const fnCode = prop.toString();
+            if (fnCode.indexOf("()") === 0) {
+                out[ownPropName] = prop();
+            }
+            else if (fnCode.indexOf("(config)") === 0) {
+                const evalRes = prop(config);
+                if (typeof evalRes === "object" && !Array.isArray(evalRes)) {
+                    out[ownPropName] = evaulateObject(evalRes, config);
+                }
+                else {
+                    out[ownPropName] = evalRes;
+                }
+            }
+            else {
+                out[ownPropName] = prop;
+            }
+        }
+        else if (Array.isArray(prop)) {
+            out[ownPropName] = [];
+            for (let i = 0; i < prop.length; i++) {
+                out[ownPropName][i] = evaulateObject(prop[i], config);
+            }
+        }
+        else if (typeof prop === "object") {
+            out[ownPropName] = evaulateObject(v[ownPropName], config);
+        }
+        else out[ownPropName] = prop;
+    });
+
+    return out;
+}
+
+export const evaulatedConfig = evaulateObject(config, config);*/
