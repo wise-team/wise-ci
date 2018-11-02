@@ -245,7 +245,19 @@ export class Config {
             config.hub.docker.services.daemon.appRole,
         ],
         secrets: {
-            steemConnectClientId: "/steemconnect/client_id"
+            humanEnter: {
+                steemConnectClientId: {
+                    description: "Steemconnect client_id",
+                    key: "/human/steemconnect/client_id"
+                },
+                slackWebhookUrl: {
+                    description: "Slack Webhook URL",
+                    key: "/human/slack/webhook_url"
+                }
+            },
+            generated: {
+                sessionSalt: "/generated/session/salt"
+            }
         }
     };
 
