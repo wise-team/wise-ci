@@ -220,9 +220,29 @@ export class Config {
             secret_shares: 4,
             secret_threshold: 2
         },
+        auths: {
+            AppRole: {
+                type: "approle",
+                description: "Docker service login",
+                config: {}
+            },
+            userpass: {
+                type: "userpass",
+                description: "User login",
+                config: {}
+            }
+        },
+        users: [
+            { username: "jblew", policies: [ "admin" ] },
+            { username: "noisy", policies: [ "admin" ] }
+        ],
         policies: (config: Config) => [
             config.hub.vault.policies.api,
             config.hub.vault.policies.daemon
+        ],
+        roles: (config: Config) => [
+            config.hub.docker.services.api.appRole,
+            config.hub.docker.services.daemon.appRole,
         ],
         secrets: {
             steemConnectClientId: "/steemconnect/client_id"
