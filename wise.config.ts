@@ -206,7 +206,7 @@ export class Config {
 
     vault = {
         url: "https://127.0.0.1:8200",
-        backendFilePath: "/opt/wise/data/Vaultfile",
+        backendFilePath: "/opt/wise/vault/Vaultfile",
         docker: {
             services: {
                 vault: {
