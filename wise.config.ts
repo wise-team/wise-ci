@@ -380,6 +380,7 @@ export class Config {
                     },
                     secrets: {
                         appRoleId: "hub-daemon-approle-id",
+                        appRoleSecret: "hub-daemon-approle-secret"
                     }
                 }
             },
@@ -512,7 +513,7 @@ export class Config {
             is_public: true,
             is_disabled: false,
             created_at: "2018-07-06T09:53:05.827Z",
-            updated_at: "2018-10-16T15:00:15.365Z"
+            updated_at: "2018-11-02T14:06:31.055Z"
           }
     };
 }
