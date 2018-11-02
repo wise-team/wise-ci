@@ -5,7 +5,7 @@ import * as path from "path";
 import * as _ from "lodash";
 
 async function run() {
-    console.log(config);
+    console.log(JSON.stringify(config, undefined, 2));
     if (!config) throw new Error("Config could not be found");
 
     const data = { config: config };

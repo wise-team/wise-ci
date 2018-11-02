@@ -26,6 +26,23 @@ export function ensureChildFile (filter: (f: string) => boolean, filename: strin
     };
 }
 
+export function ensureContents (filter: (f: string) => boolean, fileContents: string): SourcePreprocessor.Hook {
+    return async (f: string, data: any) => {
+        if (!filter(f)) return;
+        if (fs.existsSync(f)) {
+            const currentContents = fs.readFileSync(f, "UTF-8");
+            if (currentContents !== fileContents) {
+                fs.writeFileSync(f, fileContents);
+                console.log("Modified file " + f);
+            }
+        }
+        else {
+            fs.writeFileSync(f, fileContents);
+            console.log("Modified file " + f);
+        }
+    };
+}
+
 export function ensureChildDirectory (filter: (f: string) => boolean, dirname: string): SourcePreprocessor.Hook {
     return async (f: string, data: any) => {
         if (!filter(f)) return;
