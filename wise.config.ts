@@ -364,7 +364,10 @@ export class Config {
                     appRole: {
                         role: "wise-hub-api",
                         policies: (config: Config) => [ config.hub.vault.policies.api.name ],
-                        secretMount: "/secret/api-role.json"
+                    },
+                    secrets: {
+                        appRoleId: "hub-api-approle-id",
+                        appRoleSecret: "hub-api-approle-secret"
                     }
                 },
                 daemon: {
@@ -374,7 +377,9 @@ export class Config {
                     appRole: {
                         role: "wise-hub-daemon",
                         policies: (config: Config) => [ config.hub.vault.policies.daemon.name ],
-                        secretMount: "/secret/daemon-role.json"
+                    },
+                    secrets: {
+                        appRoleId: "hub-daemon-approle-id",
                     }
                 }
             },
