@@ -215,6 +215,13 @@ export class Config {
                     image: this.docker.imageHostname + "/vault"
                 }
             }
+        },
+        policies: (config: Config) => [
+            config.hub.vault.policies.api,
+            config.hub.vault.policies.daemon
+        ],
+        secrets: {
+            steemConnectClientId: "/steemconnect/client_id"
         }
     };
 
