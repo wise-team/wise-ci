@@ -13,7 +13,7 @@ export class Config {
     };
 
     wise = {
-        version: "3.0.1",
+        version: "3.0.2",
         homepage: "https://wise.vote/"
     };
 
@@ -238,11 +238,11 @@ export class Config {
         ],
         policies: (config: Config) => [
             config.hub.vault.policies.api,
-            config.hub.vault.policies.daemon
+            config.hub.vault.policies.publisher
         ],
         roles: (config: Config) => [
             config.hub.docker.services.api.appRole,
-            config.hub.docker.services.daemon.appRole,
+            config.hub.docker.services.publisher.appRole,
         ],
         secrets: {
             humanEnter: {
@@ -355,12 +355,13 @@ export class Config {
                 },
                 redis: {
                     name: "redis",
-                    container: "wise-hub-redis"
+                    container: "wise-hub-redis",
+                    volume: "wise_hub_redis"
                 },
                 api: {
                     name: "api",
                     container: "wise-hub-api",
-                    image: this.docker.imageHostname + "/hub-api",
+                    image: this.docker.imageHostname + "/hub-backend",
                     appRole: {
                         role: "wise-hub-api",
                         policies: (config: Config) => [ config.hub.vault.policies.api.name ],
@@ -373,42 +374,43 @@ export class Config {
                 daemon: {
                     name: "daemon",
                     container: "wise-hub-daemon",
-                    image: this.docker.imageHostname + "/hub-daemon",
+                    image: this.docker.imageHostname + "/hub-backend",
+                },
+                publisher: {
+                    name: "publisher",
+                    container: "wise-hub-publisher",
+                    image: this.docker.imageHostname + "/hub-backend",
                     appRole: {
-                        role: "wise-hub-daemon",
-                        policies: (config: Config) => [ config.hub.vault.policies.daemon.name ],
+                        role: "wise-hub-daemon", // TODO rename
+                        policies: (config: Config) => [ config.hub.vault.policies.publisher.name ],
                     },
                     secrets: {
-                        appRoleId: "hub-daemon-approle-id",
-                        appRoleSecret: "hub-daemon-approle-secret"
+                        appRoleId: "hub-publisher-approle-id",
+                        appRoleSecret: "hub-publisher-approle-secret"
                     }
                 }
             },
         },
         vault: {
             secrets: {
-
+                users: "/hub/steemconnect/users"
             },
             policies: {
                 api: {
                     name: "wise-hub-api",
-                    policy: `
-                    # Manage hub/public secrets
-                    path "secret/hub/public/*"
-                    {
-                      capabilities = ["create", "read", "update", "delete", "list"]
-                    }
-                    `
+                    policy: (config: Config) => `
+                    path "secret/hub/public/*" { capabilities = ["create", "read", "update", "delete", "list"] }
+                    path "secret${config.vault.secrets.humanEnter.steemConnectClientId.key}" { capabilities = [ "read" ] }
+                    path "secret${config.vault.secrets.generated.sessionSalt}" { capabilities = [ "read" ] }
+                    path "secret${config.hub.vault.secrets.users}/*" { capabilities = [ "create", "read", "update", "delete", "list" ] }
+                    ` // TODO specify allowed parameters for users secrets
                 },
-                daemon: {
-                    name: "wise-hub-daemon",
-                    policy: `
-                    # Manage hub/public secrets
-                    path "secret/hub/public/*"
-                    {
-                      capabilities = ["create", "read", "update", "delete", "list"]
-                    }
-                    `
+                publisher: {
+                    name: "wise-hub-daemon", // TODO rename
+                    policy: (config: Config) => `
+                    path "secret/hub/public/*" { capabilities = ["create", "read", "update", "delete", "list"] }
+                    path "secret${config.hub.vault.secrets.users}/*" { capabilities = [ "create", "read", "update", "delete", "list" ] }
+                    ` // TODO specify allowed parameters for users secrets
                 }
             }
         }
@@ -462,6 +464,11 @@ export class Config {
     ];
 
     steemconnect = {
+        oauth2Settings: {
+            baseAuthorizationUrl: "https://steemconnect.com/api/oauth2/authorize",
+            tokenUrl: "https://steemconnect.com/api/oauth2/token",
+            tokenRevocationUrl: "https://steemconnect.com/api/oauth2/token/revoke"
+        },
         owner: {
             account: "wise.vote",
             profile: { name: "Wise", website: this.wise.homepage },
@@ -499,11 +506,10 @@ export class Config {
             owner: "wise.vote",
             redirect_uris: [
                 this.votingPage.url.production,
-                this.hub.url.production,
-              // TODO decide wheather add staging urls to steemconnect (could be dangerous)
-              /*... _.values(this.votingPage.url),
-              ... _.values(this.hub.url),*/ // TODO
-              "http://localhost:8080/"
+                this.hub.url.production + "api/auth/callback",
+                this.hub.url.staging + "api/auth/callback",
+                "http://localhost:8080/",
+                "http://localhost:8080/api/auth/callback"
             ],
             name: "WISE",
             description: "Vote delegation system for STEEM blockchain: " + this.wise.homepage,
