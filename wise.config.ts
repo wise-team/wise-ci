@@ -13,7 +13,7 @@ export class Config {
     };
 
     wise = {
-        version: "3.0.2",
+        version: "3.0.3",
         homepage: "https://wise.vote/"
     };
 
@@ -61,12 +61,14 @@ export class Config {
         production: {
             host: "wise.vote",
             protocol: "https",
-            deployBranch: "master"
+            deployBranch: "master",
+            certbot: { email: "noisy.pl@gmail.com" }
         },
         staging: {
             host: "dev.wise.jblew.pl",
             protocol: "https",
-            deployBranch: "staging"
+            deployBranch: "staging",
+            certbot: { email: "jedrzejblew@gmail.com" }
         }
     };
 
@@ -208,6 +210,7 @@ export class Config {
         url: "https://127.0.0.1:8200",
         backendFilePath: "/opt/wise/vault/Vaultfile",
         docker: {
+            network: "vault-net",
             services: {
                 vault: {
                     name: "vault",
@@ -347,7 +350,39 @@ export class Config {
                 }
             }
         },
+        daemon: {
+            log: {
+                maxHistoryLength: 100
+            }
+        },
+        urls: {
+            api: {
+                base: "/api",
+                auth: {
+                    login: {
+                        scope: {
+                            empty: "/api/auth/login/scope/empty",
+                            custom_json: "/api/auth/login/scope/custom_json",
+                            custom_json_vote_offline: "/api/auth/login/scope/custom_json/vote/offline",
+                        },
+                    },
+                    callback: "/api/auth/callback",
+                    logout: "/api/auth/logout",
+                    revoke_all: "/api/auth/revoke_all",
+                    test_login: "/api/auth/test_login"
+                },
+                user: {
+                    base: "/api/user",
+                    settings: "/api/user/settings"
+                }
+            }
+        },
         docker: {
+            images: {
+                backend: {
+                    name: this.docker.imageHostname + "/hub-backend",
+                }
+            },
             services: {
                 nginx: {
                     name: "nginx",
@@ -361,7 +396,6 @@ export class Config {
                 api: {
                     name: "api",
                     container: "wise-hub-api",
-                    image: this.docker.imageHostname + "/hub-backend",
                     appRole: {
                         role: "wise-hub-api",
                         policies: (config: Config) => [ config.hub.vault.policies.api.name ],
@@ -374,12 +408,10 @@ export class Config {
                 daemon: {
                     name: "daemon",
                     container: "wise-hub-daemon",
-                    image: this.docker.imageHostname + "/hub-backend",
                 },
                 publisher: {
                     name: "publisher",
                     container: "wise-hub-publisher",
-                    image: this.docker.imageHostname + "/hub-backend",
                     appRole: {
                         role: "wise-hub-daemon", // TODO rename
                         policies: (config: Config) => [ config.hub.vault.policies.publisher.name ],
@@ -388,14 +420,22 @@ export class Config {
                         appRoleId: "hub-publisher-approle-id",
                         appRoleSecret: "hub-publisher-approle-secret"
                     }
+                },
+                realtime: {
+                    name: "realtime",
+                    container: "wise-hub-realtime",
+                    port: 8099
                 }
             },
         },
         vault: {
             secrets: {
-                users: "/hub/steemconnect/users"
+                users: "/hub/steemconnect/users",
+                userProfiles: "/hub/steemconnect/users/profiles",
+                accessTokens: "/hub/steemconnect/users/access_tokens",
+                refreshTokens: "/hub/steemconnect/users/refresh_tokens",
             },
-            policies: {
+            policies: { // TODO more specific policy for user secrets (separate for access tokens, refresh tokens and profiles)
                 api: {
                     name: "wise-hub-api",
                     policy: (config: Config) => `
@@ -409,6 +449,7 @@ export class Config {
                     name: "wise-hub-daemon", // TODO rename
                     policy: (config: Config) => `
                     path "secret/hub/public/*" { capabilities = ["create", "read", "update", "delete", "list"] }
+                    path "secret${config.vault.secrets.humanEnter.steemConnectClientId.key}" { capabilities = [ "read" ] }
                     path "secret${config.hub.vault.secrets.users}/*" { capabilities = [ "create", "read", "update", "delete", "list" ] }
                     ` // TODO specify allowed parameters for users secrets
                 }
@@ -454,6 +495,30 @@ export class Config {
                 excludes: [ "*linkedin.com*", "*/operations?select=moment,delegator,voter,operation_type&order=moment.desc" ]
             },
             forbiddenPhrases: [ "noisy-witness", "noisy witness", "smartvote", "muon"]
+        }
+    };
+
+    proxy = {
+        docker: {
+            container: "wise-proxy"
+        },
+        certs: { // via certbot
+            letsencryptEtcDir: "/opt/wise/certs/letsencrypt_etc",
+            letsencryptLibDir: "/opt/wise/certs/letsencrypt_lib",
+            domains: {
+                staging: [
+                    this.environments.staging.host,
+                    new URL(this.sql.url.staging).hostname,
+                    new URL(this.hub.url.staging).hostname,
+                    new URL(this.test.healthcheck.hostedLogs.url.staging).hostname,
+                ],
+                production: [
+                    this.environments.production.host,
+                    new URL(this.sql.url.production).hostname,
+                    new URL(this.hub.url.production).hostname,
+                    new URL(this.test.healthcheck.hostedLogs.url.production).hostname,
+                ]
+            }
         }
     };
 
