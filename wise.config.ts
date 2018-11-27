@@ -352,7 +352,7 @@ export class Config {
         },
         daemon: {
             log: {
-                maxHistoryLength: 100
+                maxHistoryLength: 1000
             }
         },
         urls: {
