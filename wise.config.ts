@@ -437,15 +437,17 @@ export class Config {
                 accessTokens: "/hub/steemconnect/users/access_tokens",
                 refreshTokens: "/hub/steemconnect/users/refresh_tokens",
             },
-            policies: { // TODO more specific policy for user secrets (separate for access tokens, refresh tokens and profiles)
+            policies: { // TODO publish these policies to production and staging
                 api: {
                     name: "wise-hub-api",
                     policy: (config: Config) => `
                     path "secret/hub/public/*" { capabilities = ["create", "read", "update", "delete", "list"] }
                     path "secret${config.vault.secrets.humanEnter.steemConnectClientId.key}" { capabilities = [ "read" ] }
                     path "secret${config.vault.secrets.generated.sessionSalt}" { capabilities = [ "read" ] }
-                    path "secret${config.hub.vault.secrets.users}/*" { capabilities = [ "create", "read", "update", "delete", "list" ] }
-                    ` // TODO specify allowed parameters for users secrets
+                    path "secret${config.hub.vault.secrets.userProfiles}/*" { capabilities = [ "create", "read", "update", "delete", "list" ] }
+                    path "secret${config.hub.vault.secrets.accessTokens}/*" { capabilities = [ "create", "update", "delete" ] }
+                    path "secret${config.hub.vault.secrets.refreshTokens}/*" { capabilities = [ "create", "update", "delete" ] }
+                    `
                 },
                 publisher: {
                     name: "wise-hub-daemon", // TODO rename
@@ -453,7 +455,9 @@ export class Config {
                     path "secret/hub/public/*" { capabilities = ["create", "read", "update", "delete", "list"] }
                     path "secret${config.vault.secrets.humanEnter.steemConnectClientId.key}" { capabilities = [ "read" ] }
                     path "secret${config.hub.vault.secrets.users}/*" { capabilities = [ "create", "read", "update", "delete", "list" ] }
-                    ` // TODO specify allowed parameters for users secrets
+                    path "secret${config.hub.vault.secrets.accessTokens}/*" { capabilities = [ "read", "update" ] }
+                    path "secret${config.hub.vault.secrets.refreshTokens}/*" { capabilities = [ "read" ] }
+                    `
                 }
             }
         }
