@@ -296,7 +296,8 @@ export class Config {
                 },
                 postgrest: {
                     name: "postgrest",
-                    container: "wise-sql-postgrest"
+                    container: "wise-sql-postgrest",
+                    port: 9002
                 },
                 api_proxy: {
                     name: "wise_sql_api_proxy",
@@ -333,7 +334,7 @@ export class Config {
                     name: "site",
                     container: "voting-page",
                     image: this.docker.imageHostname + "/voting-page",
-                    port: 8080 // this is used in caddy config
+                    port: 8080
                 }
             }
         }
@@ -386,16 +387,17 @@ export class Config {
             services: {
                 nginx: {
                     name: "nginx",
-                    container: "wise-hub-serve"
+                    // container: "wise-hub-serve"
+                    port: 8095
                 },
                 redis: {
                     name: "redis",
-                    container: "wise-hub-redis",
+                    // container: "wise-hub-redis",
                     volume: "wise_hub_redis"
                 },
                 api: {
                     name: "api",
-                    container: "wise-hub-api",
+                    // container: "wise-hub-api",
                     appRole: {
                         role: "wise-hub-api",
                         policies: (config: Config) => [ config.hub.vault.policies.api.name ],
@@ -407,11 +409,11 @@ export class Config {
                 },
                 daemon: {
                     name: "daemon",
-                    container: "wise-hub-daemon",
+                    // container: "wise-hub-daemon",
                 },
                 publisher: {
                     name: "publisher",
-                    container: "wise-hub-publisher",
+                    // container: "wise-hub-publisher",
                     appRole: {
                         role: "wise-hub-daemon", // TODO rename
                         policies: (config: Config) => [ config.hub.vault.policies.publisher.name ],
@@ -423,7 +425,7 @@ export class Config {
                 },
                 realtime: {
                     name: "realtime",
-                    container: "wise-hub-realtime",
+                    // container: "wise-hub-realtime",
                     port: 8099
                 }
             },
