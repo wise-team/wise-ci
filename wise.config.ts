@@ -507,6 +507,7 @@ export class Config {
         certs: { // via certbot
             letsencryptEtcDir: "/opt/wise/certs/letsencrypt_etc",
             letsencryptLibDir: "/opt/wise/certs/letsencrypt_lib",
+            webroot: "/opt/wise/certs/webroot",
             domains: {
                 staging: [
                     this.environments.staging.host,
