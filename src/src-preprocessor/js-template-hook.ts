@@ -33,6 +33,12 @@ export function jsTemplate (filter: (f: string) => boolean, dataObject: any): So
 
             fileContents = processBlockCommentsTemplates(
                 f, fileContents, dataObject,
+                /^(\s*)\/\/§([^\n]*\n\s*)([^\n)]*)(\n)/gmui,
+                (whitespace, left, value, right) => whitespace + "//" + "§" + left + value + right
+            );
+
+            fileContents = processBlockCommentsTemplates(
+                f, fileContents, dataObject,
                 /^(\s*)([^#\n]+)#§<([^\n]*)(\n)/gmui,
                 (whitespace, left, value, right) => whitespace + value + " #" + "§<" + left + right,
                 { whitespace: 1, value: 2, left: 3, right: 4 }

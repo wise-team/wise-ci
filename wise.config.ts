@@ -13,18 +13,19 @@ export class Config {
     };
 
     wise = {
-        version: "3.0.3",
+        version: "3.0.5",
         homepage: "https://wise.vote/"
     };
 
     steem = {
         minimalApiBlockchainVersion: "0.20.5",
         minimalApiHardforkVersion: "0.20.0",
-        defaultApiUrl: "https://api.steemit.com",
+        defaultApiUrl: "https://anyx.io",
         apis: [
             { url: "https://api.steemit.com", get_block: true },
             // temporarily disable, but works { url: "https://steemd.minnowsupportproject.org", get_block: true },
             { url: "https://rpc.buildteam.io", get_block: true },
+            { url: "https://anyx.io", get_block: true },
             // temporarily disable but works { url: "https://rpc.steemliberator.com", get_block: true }, /* http (plain) also works */
             // unstable: { url: "wss://rpc.steemviz.com", get_block: true }, /* ws (plain) also works */
             // looks like we got banned at wise.vote server IP { url: "https://steemd.privex.io", get_block: true }
@@ -232,8 +233,20 @@ export class Config {
             userpass: {
                 type: "userpass",
                 description: "User login",
-                config: {}
-            }
+                config: {
+                    ttl: "20m",
+                    max_ttl: "30m"
+                }
+            },
+            /*Github: {
+                type: "github",
+                description: "Authenticate devs via github",
+                config: {
+                    organization: "wise-team",
+                    ttl: "20m",
+                    max_ttl: "30m"
+                }
+            }*/
         },
         users: [
             { username: "jblew", policies: [ "admin" ] },
@@ -253,10 +266,6 @@ export class Config {
                     description: "Steemconnect client_id",
                     key: "/human/steemconnect/client_id"
                 },
-                slackWebhookUrl: {
-                    description: "Slack Webhook URL",
-                    key: "/human/slack/webhook_url"
-                }
             },
             generated: {
                 sessionSalt: "/generated/session/salt"
@@ -274,6 +283,7 @@ export class Config {
     sql = {
         // the following param sets the protocol and domain. If you change it, the server configuration changes
         url: _.mapValues(this.environments, env => env.protocol + "://sql." + env.host + "/"),
+        port: 8094,
         protocol: {
             version: "1.0",
             maxRowsPerPage: 1000
@@ -311,22 +321,21 @@ export class Config {
     };
 
     manual = {
-        // this does not set the host nor the port, it is only referenced in docs and so on
-        url: _.mapValues(this.environments, env => env.protocol + "://" + env.host + "/introduction"),
+        url: _.mapValues(this.environments, env => env.protocol + "://docs." + env.host + "/introduction"),
+        port: 8096,
         docker: {
             services: {
                 frontend: {
                     name: "frontend",
                     container: "wise-manual",
                     image: this.docker.imageHostname + "/manual",
-                    port: 4000 // this is used in caddy config
                 }
             }
         }
     };
 
     votingPage = {
-        // this does not set the host nor the port, it is only referenced in docs and so on
+        port: 8093,
         url: _.mapValues(this.environments, env => env.protocol + "://" + env.host + "/voting-page/"),
         docker: {
             services: {
@@ -334,7 +343,6 @@ export class Config {
                     name: "site",
                     container: "voting-page",
                     image: this.docker.imageHostname + "/voting-page",
-                    port: 8080
                 }
             }
         }
@@ -342,13 +350,19 @@ export class Config {
 
     hub = {
         // the following param sets the protocol and domain. If you change it, the server configuration changes
-        url: _.mapValues(this.environments, env => env.protocol + "://hub." + env.host + "/"),
+        url: _.mapValues(this.environments, env => env.protocol + "://" + env.host + "/"),
+        port: 8095,
         visual: {
             read: {
                 lastActivity: {
                     trxLinkBase: "https://steemd.com/tx/{trx}",
                     articleLinkBase: "https://steemit.com/@{author}/{permlink}"
                 }
+            }
+        },
+        api: {
+            cookie: {
+                maxAgeMs: 7 * 24 * 60 * 60 * 1000
             }
         },
         daemon: {
@@ -374,7 +388,10 @@ export class Config {
                 },
                 user: {
                     base: "/api/user",
-                    settings: "/api/user/settings"
+                    settings: "/api/user/settings",
+                },
+                accounts: {
+                    base: "/api/accounts",
                 }
             }
         },
@@ -388,7 +405,6 @@ export class Config {
                 nginx: {
                     name: "nginx",
                     // container: "wise-hub-serve"
-                    port: 8095
                 },
                 redis: {
                     name: "redis",
@@ -415,7 +431,7 @@ export class Config {
                     name: "publisher",
                     // container: "wise-hub-publisher",
                     appRole: {
-                        role: "wise-hub-daemon", // TODO rename
+                        role: "wise-hub-publisher", // TODO rename
                         policies: (config: Config) => [ config.hub.vault.policies.publisher.name ],
                     },
                     secrets: {
@@ -445,12 +461,12 @@ export class Config {
                     path "secret${config.vault.secrets.humanEnter.steemConnectClientId.key}" { capabilities = [ "read" ] }
                     path "secret${config.vault.secrets.generated.sessionSalt}" { capabilities = [ "read" ] }
                     path "secret${config.hub.vault.secrets.userProfiles}/*" { capabilities = [ "create", "read", "update", "delete", "list" ] }
-                    path "secret${config.hub.vault.secrets.accessTokens}/*" { capabilities = [ "create", "update", "delete" ] }
-                    path "secret${config.hub.vault.secrets.refreshTokens}/*" { capabilities = [ "create", "update", "delete" ] }
+                    path "secret${config.hub.vault.secrets.accessTokens}/*" { capabilities = [ "create", "read", "update", "delete" ] }
+                    path "secret${config.hub.vault.secrets.refreshTokens}/*" { capabilities = [ "create", "read", "update", "delete" ] }
                     `
                 },
                 publisher: {
-                    name: "wise-hub-daemon", // TODO rename
+                    name: "wise-hub-publisher", // TODO rename
                     policy: (config: Config) => `
                     path "secret/hub/public/*" { capabilities = ["create", "read", "update", "delete", "list"] }
                     path "secret${config.vault.secrets.humanEnter.steemConnectClientId.key}" { capabilities = [ "read" ] }
@@ -471,6 +487,7 @@ export class Config {
             hostedLogs: {
                 // the following param sets the protocol and domain. If you change it, the server configuration changes
                 url: _.mapValues(this.environments, env => env.protocol + "://test." + env.host + "/"),
+                port: 8097
             },
             docker: {
                 services: {
@@ -507,25 +524,6 @@ export class Config {
     proxy = {
         docker: {
             container: "wise-proxy"
-        },
-        certs: { // via certbot
-            letsencryptEtcDir: "/opt/wise/certs/letsencrypt_etc",
-            letsencryptLibDir: "/opt/wise/certs/letsencrypt_lib",
-            webroot: "/opt/wise/certs/webroot",
-            domains: {
-                staging: [
-                    this.environments.staging.host,
-                    new URL(this.sql.url.staging).hostname,
-                    new URL(this.hub.url.staging).hostname,
-                    new URL(this.test.healthcheck.hostedLogs.url.staging).hostname,
-                ],
-                production: [
-                    this.environments.production.host,
-                    new URL(this.sql.url.production).hostname,
-                    new URL(this.hub.url.production).hostname,
-                    new URL(this.test.healthcheck.hostedLogs.url.production).hostname,
-                ]
-            }
         }
     };
 
@@ -593,6 +591,11 @@ export class Config {
             created_at: "2018-07-06T09:53:05.827Z",
             updated_at: "2018-11-03T13:10:36.467Z"
           }
+    };
+
+    urls = {
+        voteForWitness: "https://steemit.com/~witnesses",
+        daemonInstallationInstructions: "https://docs.wise.vote/installation"
     };
 }
 
