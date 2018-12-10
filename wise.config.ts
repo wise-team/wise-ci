@@ -13,7 +13,7 @@ export class Config {
     };
 
     wise = {
-        version: "3.0.5",
+        version: "3.0.5-rc2",
         homepage: "https://wise.vote/"
     };
 
@@ -55,7 +55,7 @@ export class Config {
         name: "Wise Team",
         website: { url: "https://wise-team.io/" },
         steem: { account: "wise-team" },
-        securityEmail: "jedrzejblew@gmail.com"
+        securityEmail: "contact@wiseteam.io"
     };
 
     environments = {
@@ -136,6 +136,7 @@ export class Config {
                 return helpUsTemplateMd
                         .replace(new RegExp("{githubOrgName}", "g"), d(config.repository.github.organization))
                         .replace(new RegExp("{repositoryName}", "g"), d(data.repository.name))
+                        .replace(new RegExp("{securityEmail}", "g"), config.team.securityEmail)
                         .replace(new RegExp("{witnessAccount}", "g"), d(data.config.witness.account));
             },
             generateHelpMd: (data: any) => {
@@ -144,6 +145,7 @@ export class Config {
                         .replace(new RegExp("{githubOrgName}", "g"), config.repository.github.organization)
                         .replace(new RegExp("{manualUrl}", "g"), config.manual.url.production)
                         .replace(new RegExp("{chatUrl}", "g"), config.communitation.chat.url)
+                        .replace(new RegExp("{securityEmail}", "g"), config.team.securityEmail)
                         .replace(new RegExp("{repositoryName}", "g"), data.repository.name);
             },
         },

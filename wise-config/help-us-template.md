@@ -6,7 +6,7 @@ We welcome warmly:
 - Bug reports via [issues](https://github.com/{githubOrgName}/{repositoryName}).
 - Enhancement requests via via [issues](https://github.com/{githubOrgName}/{repositoryName}/issues).
 - [Pull requests](https://github.com/{githubOrgName}/{repositoryName}/pulls)
-- Security reports to _jedrzejblew@gmail.com_.
+- Security reports to _{securityEmail}_.
 
 **Before** contributing please **read [Wise CONTRIBUTING guide](https://github.com/{githubOrgName}/steem-wise-core/blob/master/CONTRIBUTING.md)**.
 
