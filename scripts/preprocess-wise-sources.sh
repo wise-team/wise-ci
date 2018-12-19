@@ -23,7 +23,7 @@ function preprocessRepository()
         git checkout ${REPO_BRANCH}
         npm run preprocess-wise -- "${REPO_DIR}"
     } || { # catch
-        echo "There were errors. wise-ci stash will be restores"
+        echo "There were errors. wise-ci stash will be restored"
     }
     # finally
     git checkout ${WISE_CI_BRANCH}
