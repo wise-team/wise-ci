@@ -6,4 +6,4 @@ export const data = {
         name: "wise-ci"
     }
 };
-export const excludes = [ "js-template-hook.ts" ];
+export const excludes = [ "js-template-hook.ts", "preprocess-wise.ts" ];
