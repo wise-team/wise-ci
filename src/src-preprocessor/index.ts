@@ -12,6 +12,7 @@ export class SourcePreprocessor {
 
     public constructor(parent: string) {
         this.parent = paths.resolve(parent);
+        console.log("Preprocessing " + this.parent);
     }
 
     public async preprocess(dataObject: any, hooks: SourcePreprocessor.Hook [], excludes: string []) {

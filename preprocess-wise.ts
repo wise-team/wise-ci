@@ -4,12 +4,12 @@ import * as fs from "fs";
 import * as path from "path";
 import * as _ from "lodash";
 
-async function run() {
+async function run(basePath: string) {
     console.log(JSON.stringify(config, undefined, 2));
     if (!config) throw new Error("Config could not be found");
 
     const data = { config: config };
-    const preprocessor = new SP("..");
+    const preprocessor = new SP(basePath);
 
     await preprocessor.preprocess(data, [
         // Repository rules
@@ -98,4 +98,9 @@ async function run() {
     );
 }
 
-run();
+const args = process.argv.slice(2);
+if (args.length === 0) {
+    throw new Error("You must specify path");
+}
+const basePath = args[0];
+run(basePath);
