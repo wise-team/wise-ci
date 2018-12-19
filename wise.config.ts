@@ -210,6 +210,10 @@ export class Config {
     };
 
     vault = {
+        servers: {
+            production: { url: "https://vault.wise.vote:8200" },
+            staging: { url: "https://vault.dev.wise.vote:8200" },
+        },
         url: "https://127.0.0.1:8200",
         backendFilePath: "/opt/wise/vault/Vaultfile",
         docker: {
