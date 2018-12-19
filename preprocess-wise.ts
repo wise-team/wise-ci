@@ -4,6 +4,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as _ from "lodash";
 
+
 async function run(basePath: string) {
     console.log(JSON.stringify(config, undefined, 2));
     if (!config) throw new Error("Config could not be found");
