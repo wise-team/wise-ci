@@ -565,38 +565,73 @@ export class Config {
             recovery_account: "noisy"
         },
         app: {
-            account: "wisevote.app",
-            last_account_update: "1970-01-01T00:00:00",
-            last_owner_update: "1970-01-01T00:00:00",
-            keys: {
-                owner: "STM82hFUKjN2j8KGqQ8rz9YgFAbMrWFuCPkabtrAnUfV2JQshNPLz",
-                active: "STM78mV5drS6a5SredobAJXvzZv7tvBo4Cj15rumRcBtMzTWT173a",
-                posting: "STM6ZVzWQvbYSzVpY2PRJHu7QSASVy8aB8xSVcJgx5seYGHPFvJkZ",
-                memo: "STM7o1DigBaUEF28n2ap5PeY9Jqhndz3zWmF7xZ3zfRgSqeLaMnyA"
+            production : {
+                app: {
+                    account: "wisevote.app",
+                    last_account_update: "1970-01-01T00:00:00",
+                    last_owner_update: "1970-01-01T00:00:00",
+                    keys: {
+                        owner: "STM82hFUKjN2j8KGqQ8rz9YgFAbMrWFuCPkabtrAnUfV2JQshNPLz",
+                        active: "STM78mV5drS6a5SredobAJXvzZv7tvBo4Cj15rumRcBtMzTWT173a",
+                        posting: "STM6ZVzWQvbYSzVpY2PRJHu7QSASVy8aB8xSVcJgx5seYGHPFvJkZ",
+                        memo: "STM7o1DigBaUEF28n2ap5PeY9Jqhndz3zWmF7xZ3zfRgSqeLaMnyA"
+                    },
+                    recovery_account: "wise.vote"
+                },
+                settings: {
+                    id: 493,
+                    client_id: "wisevote.app",
+                    owner: "wise.vote",
+                    redirect_uris: [
+                        this.votingPage.url.production,
+                        this.hub.url.production + "api/auth/callback",
+                    ],
+                    name: "WISE",
+                    description: "Vote delegation system for STEEM blockchain: " + this.wise.homepage,
+                    icon: "https://wise.vote/wise-assets/wise/wise-logo-color_128x128.png",
+                    website: this.wise.homepage,
+                    beneficiaries: null,
+                    is_public: true,
+                    is_disabled: false,
+                    created_at: "2018-07-06T09:53:05.827Z",
+                    updated_at: "2018-12-19T15:50:35.436Z"
+                }
             },
-            recovery_account: "wise.vote"
-        },
-        settings: {
-            id: 493,
-            client_id: "wisevote.app",
-            owner: "wise.vote",
-            redirect_uris: [
-                this.votingPage.url.production,
-                this.hub.url.production + "api/auth/callback",
-                this.hub.url.staging + "api/auth/callback",
-                "http://localhost:8080/",
-                "http://localhost:8080/api/auth/callback"
-            ],
-            name: "WISE",
-            description: "Vote delegation system for STEEM blockchain: " + this.wise.homepage,
-            icon: this.wise.homepage + "assets/wise-full-color-icon-128.png",
-            website: this.wise.homepage,
-            beneficiaries: null,
-            is_public: true,
-            is_disabled: false,
-            created_at: "2018-07-06T09:53:05.827Z",
-            updated_at: "2018-11-03T13:10:36.467Z"
-          }
+            staging: {
+                app: {
+                    account: "wisevote.staging",
+                    last_account_update: "1970-01-01T00:00:00",
+                    last_owner_update: "1970-01-01T00:00:00",
+                    keys: {
+                        owner: "STM82hFUKjN2j8KGqQ8rz9YgFAbMrWFuCPkabtrAnUfV2JQshNPLz",
+                        active: "STM78mV5drS6a5SredobAJXvzZv7tvBo4Cj15rumRcBtMzTWT173a",
+                        posting: "STM6ZVzWQvbYSzVpY2PRJHu7QSASVy8aB8xSVcJgx5seYGHPFvJkZ",
+                        memo: "STM7o1DigBaUEF28n2ap5PeY9Jqhndz3zWmF7xZ3zfRgSqeLaMnyA"
+                    },
+                    recovery_account: "wise.vote"
+                },
+                settings: {
+                    id: 718,
+                    client_id: "wisevote.staging",
+                    owner: "wise.vote",
+                    redirect_uris: [
+                        this.votingPage.url.staging,
+                        this.hub.url.staging + "api/auth/callback",
+                        "http://localhost:8080",
+                        "http://localhost:8080/api/auth/callback"
+                    ],
+                    name: "Staging WISE",
+                    description: "Staging WISE",
+                    icon: "https://wise.vote/wise-assets/wise/wise-logo-color_128x128.png",
+                    website: this.hub.url.staging,
+                    beneficiaries: null,
+                    is_public: false,
+                    is_disabled: false,
+                    created_at: "2018-12-14T10:47:57.939Z",
+                    updated_at: "2018-12-19T16:07:48.365Z"
+                }
+            }
+        }
     };
 
     urls = {
