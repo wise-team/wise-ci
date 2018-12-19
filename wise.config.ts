@@ -13,7 +13,7 @@ export class Config {
     };
 
     wise = {
-        version: "3.0.5-rc2",
+        version: "3.1.0-rc.1",
         homepage: "https://wise.vote/"
     };
 
