@@ -17,7 +17,8 @@ function preprocessRepository()
     REPO_BRANCH=$(git -C "${REPO_DIR}" rev-parse --abbrev-ref HEAD)
     echo "${REPO_DIR} preprocessing branch ${REPO_BRANCH}"
 
-    git stash
+    touch .keepstash
+    git stash push --include-untracked
 
     { # try
         git checkout ${REPO_BRANCH}
@@ -28,6 +29,7 @@ function preprocessRepository()
     # finally
     git checkout ${WISE_CI_BRANCH}
     git stash apply
+    rm .keepstash
 }
 
 ROOT_DIR="${DIR}/.."
