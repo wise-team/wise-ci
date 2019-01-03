@@ -66,12 +66,12 @@ export class Config {
             certbot: { email: "noisy.pl@gmail.com" }
         },
         staging: {
-            host: "dev.wise.jblew.pl",
             protocol: "https",
             deployBranch: "staging",
             certbot: { email: "jedrzejblew@gmail.com" }
         }
     };
+      host: "dev.wise.vote",
 
     npm = {
         node: { version: "10.12" },
