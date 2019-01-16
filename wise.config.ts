@@ -74,7 +74,7 @@ export class Config {
   };
 
   npm = {
-    node: { version: "10.12" },
+    node: { version: "10.15" },
     keywords: ["steem", "blockchain", "wise"],
     author: "The " + this.team.name + " (" + this.team.website.url + ")"
   };
