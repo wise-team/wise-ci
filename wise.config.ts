@@ -14,7 +14,7 @@ export class Config {
 
   wise = {
     version: "3.1.1",
-    homepage: "https://wise.vote/"
+    Dhomepage: "https://wise.vote/"
   };
 
   steem = {
@@ -25,8 +25,8 @@ export class Config {
       { url: "https://api.steemit.com", get_block: true },
       // temporarily disable, but works { url: "https://steemd.minnowsupportproject.org", get_block: true },
       // not working on SQL: { url: "https://rpc.buildteam.io", get_block: true },
-      { url: "https://anyx.io", get_block: true },
-      { url: "https://rpc.usesteem.com/", get_block: true }
+      { url: "https://anyx.io", get_block: true }
+      // { url: "https://rpc.usesteem.com/", get_block: false }
       // temporarily disable but works { url: "https://rpc.steemliberator.com", get_block: true }, /* http (plain) also works */
       // unstable: { url: "wss://rpc.steemviz.com", get_block: true }, /* ws (plain) also works */
       // looks like we got banned at wise.vote server IP { url: "https://steemd.privex.io", get_block: true }
