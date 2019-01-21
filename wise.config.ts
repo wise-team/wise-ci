@@ -24,8 +24,9 @@ export class Config {
     apis: [
       { url: "https://api.steemit.com", get_block: true },
       // temporarily disable, but works { url: "https://steemd.minnowsupportproject.org", get_block: true },
-      { url: "https://rpc.buildteam.io", get_block: true },
-      { url: "https://anyx.io", get_block: true }
+      // not working on SQL: { url: "https://rpc.buildteam.io", get_block: true },
+      { url: "https://anyx.io", get_block: true },
+      { url: "https://rpc.usesteem.com/", get_block: true }
       // temporarily disable but works { url: "https://rpc.steemliberator.com", get_block: true }, /* http (plain) also works */
       // unstable: { url: "wss://rpc.steemviz.com", get_block: true }, /* ws (plain) also works */
       // looks like we got banned at wise.vote server IP { url: "https://steemd.privex.io", get_block: true }
@@ -784,44 +785,3 @@ export class Config {
 }
 
 export const config = new Config();
-/*
-function evaulateObject(v: any, config: Config) {
-    const out: any = {};
-
-    _.forOwn(v, (value, ownPropName) => {
-        const prop = v[ownPropName];
-
-        if (typeof prop === "function") {
-            const fnCode = prop.toString();
-            if (fnCode.indexOf("()") === 0) {
-                out[ownPropName] = prop();
-            }
-            else if (fnCode.indexOf("(config)") === 0) {
-                const evalRes = prop(config);
-                if (typeof evalRes === "object" && !Array.isArray(evalRes)) {
-                    out[ownPropName] = evaulateObject(evalRes, config);
-                }
-                else {
-                    out[ownPropName] = evalRes;
-                }
-            }
-            else {
-                out[ownPropName] = prop;
-            }
-        }
-        else if (Array.isArray(prop)) {
-            out[ownPropName] = [];
-            for (let i = 0; i < prop.length; i++) {
-                out[ownPropName][i] = evaulateObject(prop[i], config);
-            }
-        }
-        else if (typeof prop === "object") {
-            out[ownPropName] = evaulateObject(v[ownPropName], config);
-        }
-        else out[ownPropName] = prop;
-    });
-
-    return out;
-}
-
-export const evaulatedConfig = evaulateObject(config, config);*/
