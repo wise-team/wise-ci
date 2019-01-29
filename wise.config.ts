@@ -688,7 +688,7 @@ export class Config {
     owner: {
       account: "wise.vote",
       profile: { name: "Wise", website: this.wise.homepage },
-      last_account_update: "2018-10-22T13:31:54",
+      last_account_update: "2019-01-09T22:12:00",
       last_owner_update: "2018-10-22T13:31:54",
       keys: {
         owner: "STM5qMTthdfQMQREDNxjz3zsKBRY15SfLToNnzPM7RwWddiHwD3Xq",
@@ -708,7 +708,7 @@ export class Config {
       production: {
         app: {
           account: "wisevote.app",
-          last_account_update: "1970-01-01T00:00:00",
+          last_account_update: "2019-01-09T22:12:00",
           last_owner_update: "1970-01-01T00:00:00",
           keys: {
             owner: "STM82hFUKjN2j8KGqQ8rz9YgFAbMrWFuCPkabtrAnUfV2JQshNPLz",
@@ -766,13 +766,13 @@ export class Config {
           name: "Staging WISE",
           description: "Staging WISE",
           icon:
-            "https://wise.vote/wise-assets/wise/wise-logo-color_128x128.png",
+            "https://staging.wise.vote/wise-assets/wise/wise-logo-color_128x128.png",
           website: this.hub.url.staging,
           beneficiaries: null,
           is_public: false,
           is_disabled: false,
           created_at: "2018-12-14T10:47:57.939Z",
-          updated_at: "2018-12-19T16:07:48.365Z"
+          updated_at: "2019-01-29T11:45:20.395Z"
         }
       }
     }
