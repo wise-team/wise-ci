@@ -57,7 +57,7 @@ async function run(basePath: string) {
         SP.hooks.jsonPathRules(
             SP.filters.isFileNamed("package.json"),
             [
-                ["$.version", (obj, value) => d(config.wise.version), {}],
+                // ["$.version", (obj, value) => d(config.wise.version), {}],
                 ["$.engines.node", (obj, value) => ">=" + d(config.npm.node.version), {}],
                 ["$.repository.type", (obj, value) => "git", {}],
                 ["$.repository.url", (obj, value, data) => "git+https://github.com/" + d(config.repository.github.organization) + "/" + d(data.repository.name) + ".git", {}],
@@ -66,7 +66,7 @@ async function run(basePath: string) {
                 ["$.license", (obj, value) => d(config.license.code), {}],
                 ["$.homepage", (obj, value) => d(config.wise.homepage), {}],
                 ["$.bugs.url", (obj, value, data) => "https://github.com/" + d(config.repository.github.organization) + "/" + d(data.repository.name) + "/issues", {}],
-                ["$.dependencies[\"steem-wise-core\"]", (obj, value, data) => "^" + d(config.wise.version), { doNotCreate: true }],
+                // ["$.dependencies[\"steem-wise-core\"]", (obj, value, data) => "^" + d(config.wise.version), { doNotCreate: true }],
             ]
         ),
 
@@ -74,7 +74,7 @@ async function run(basePath: string) {
         SP.hooks.jsonPathRules(
             SP.filters.isFileNamed("package-lock.json"),
             [
-                ["$.version", (obj, value) => d(config.wise.version), {}],
+                // ["$.version", (obj, value) => d(config.wise.version), {}],
             ]
         ),
 
