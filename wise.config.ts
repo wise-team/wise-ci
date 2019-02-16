@@ -708,7 +708,7 @@ export class Config {
       production: {
         app: {
           account: "wisevote.app",
-          last_account_update: "1970-01-01T00:00:00",
+          last_account_update: "2019-02-16T09:00:06",
           last_owner_update: "1970-01-01T00:00:00",
           keys: {
             owner: "STM82hFUKjN2j8KGqQ8rz9YgFAbMrWFuCPkabtrAnUfV2JQshNPLz",
@@ -743,7 +743,7 @@ export class Config {
       staging: {
         app: {
           account: "wisevote.staging",
-          last_account_update: "1970-01-01T00:00:00",
+          last_account_update: "2019-02-16T09:32:18",
           last_owner_update: "1970-01-01T00:00:00",
           keys: {
             owner: "STM82hFUKjN2j8KGqQ8rz9YgFAbMrWFuCPkabtrAnUfV2JQshNPLz",
